@@ -1,6 +1,7 @@
 import React from 'react'
 import logo from './logo.svg'
 import './App.css'
+import { Button } from '@mui/material'
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
           Learn React
         </a>
       </header>
+      <React.Fragment>
+        <Button variant="contained">Hello World</Button>
+      </React.Fragment>
     </div>
   )
 }
