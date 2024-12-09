@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import App from './App'
 import Home from './pages/home'
-import EditorCommon from './components/Editor'
+import TuiEditor from './components/Editor'
 
 const Router = () => {
   return (
@@ -9,7 +9,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/writing" element={<EditorCommon />} />
+        <Route path="/writing" element={<TuiEditor />} />
       </Routes>
     </BrowserRouter>
   )
