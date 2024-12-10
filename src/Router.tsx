@@ -3,6 +3,7 @@ import App from './App'
 import Home from './pages/home'
 import TuiEditor from './components/Editor'
 import React from 'react'
+import Post from './pages/Post'
 
 const Router: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const Router: React.FC = () => {
         <Route path="/" element={<App />} />
         <Route path="/home" element={<Home />} />
         <Route path="/posts" element={<TuiEditor />} />
-        {/* <Route path="/post_temp" element={<Post />} /> */}
+        <Route path="/post_temp" element={<Post />} />
       </Routes>
     </BrowserRouter>
   )
