@@ -1,46 +1,72 @@
 import '@toast-ui/editor/dist/toastui-editor.css'
 import { Editor } from '@toast-ui/react-editor'
 import React, { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import './Editor.css'
 
 const TuiEditor: React.FC = () => {
-  const editorRef = useRef<Editor | null>(null) // 명시적으로 Editor 타입을 설정
-  const [content, setContent] = useState<string>('') // 상태를 관리
+  const editorRef = useRef<Editor | null>(null)
+  const [title, setTitle] = useState<string>('')
+  const [author, setAuthor] = useState<string>('')
+  const [content, setContent] = useState<string>('')
+  const [createdAt, setCreatedAt] = useState<string>('')
 
-  const handleBold = () => {
-    if (editorRef.current) {
-      editorRef.current.getInstance().exec('bold')
-    }
-  }
+  const navigate = useNavigate()
 
   const handleSave = () => {
+    if (!title.trim()) {
+      alert('제목을 입력해주세요.')
+      return
+    }
+
     if (editorRef.current) {
       const editorContent = editorRef.current.getInstance().getMarkdown()
-      setContent(editorContent) // 에디터 내용을 상태에 저장
+      setContent(editorContent)
+      const currentDate = new Date().toLocaleString()
+      setCreatedAt(currentDate)
+
+      // 페이지 이동과 함께 state 전달
+      navigate('/post', {
+        state: {
+          title,
+          author,
+          content: editorContent,
+          createdAt: currentDate,
+        },
+      })
     }
   }
 
   return (
-    <>
+    <div className="editor-container">
+      <div className="editor-input-row">
+        <input
+          type="text"
+          placeholder="제목"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="작성자"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+      </div>
       <Editor
         previewStyle="vertical"
         height="400px"
         initialEditType="markdown"
-        initialValue="hello"
+        initialValue="내용을 입력해주세요."
         ref={editorRef}
       />
-      <div id="toastUIEditor">
-        <h1>Toast UI Editor Example</h1>
-        <div id="button">
-          <button className="btn_save" onClick={handleSave}>
-            Save
-          </button>
-        </div>
-        <div>
-          <h2>Result</h2>
-          <textarea className="result" value={content} readOnly></textarea>
-        </div>
+      <div>
+        <button className="btn_save" onClick={handleSave}>
+          저장하기
+        </button>
       </div>
-    </>
+    </div>
   )
 }
 
