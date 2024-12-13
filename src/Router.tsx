@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import App from './App'
 import Home from './pages/home'
-import TuiEditor from './components/Editor'
-import React from 'react'
+import Writing from './pages/Writing'
+
 
 const Router: React.FC = () => {
   return (
@@ -10,8 +10,7 @@ const Router: React.FC = () => {
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/posts" element={<TuiEditor />} />
-        {/* <Route path="/post_temp" element={<Post />} /> */}
+        <Route path="/writing" element={<Writing />} />
       </Routes>
     </BrowserRouter>
   )

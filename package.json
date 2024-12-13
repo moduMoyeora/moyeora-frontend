@@ -21,8 +21,10 @@
     "axios": "^1.7.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.0",
     "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
+    "tui-editor-plugin-font-size": "^1.0.4",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
