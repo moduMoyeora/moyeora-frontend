@@ -3,7 +3,8 @@ import App from './App'
 import Home from './pages/home'
 import Writing from './pages/Writing'
 
-const Router = () => {
+
+const Router: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
