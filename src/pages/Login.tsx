@@ -1,5 +1,6 @@
-import './signup.css'
+import './Signup.css'
 
+import { JwtPayload, jwtDecode } from 'jwt-decode'
 import { useEffect, useState } from 'react'
 
 import Button from '@mui/material/Button'
@@ -17,34 +18,35 @@ import Typography from '@mui/material/Typography'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import axios from 'axios'
-import { jwtDecode } from 'jwt-decode'
+import { login } from '../api/auth.api'
+import { useAuthStore } from '../store/authStore'
 import { useNavigate } from 'react-router-dom'
 
-interface JwtPayload {
-  user_id: string
+export interface LoginProps {
+  email: string
+  password: string
 }
+
 export default function Login() {
-  axios.defaults.baseURL = 'http://localhost:3000'
+  const { isLoggedIn, storeLogin, storeLogout } = useAuthStore()
   const navigate = useNavigate()
   const [password, setPassword] = React.useState('')
   const [showPassword, setShowPassword] = React.useState(false)
   const [email, setEmail] = React.useState('')
   const handleLogin = () => {
-    console.log(email, password)
-    axios.post(`/users/login`, { email, password }).then((res) => {
-      if (res.status === 200 || res.status === 201) {
-        alert('로그인 완료')
-        localStorage.setItem('token', res.data.token)
-        axios.defaults.headers.common['Authorization'] =
-          `Bearer ${res.data.token}`
-        console.log(res.data.token)
-        const decoded = jwtDecode<JwtPayload>(res.data.token)
-        localStorage.setItem('user_id', decoded.user_id)
-        navigate('/')
-      } else {
-        alert('로그인에 실패했습니다.')
-      }
-    })
+    try {
+      login(email, password).then((res) => {
+        if (res.status === 200 || res.status === 201) {
+          alert('로그인 완료')
+          storeLogin(res.data.token)
+          navigate('/')
+        } else {
+          alert('로그인에 실패했습니다.')
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 

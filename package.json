@@ -28,7 +28,8 @@
     "react-scripts": "5.0.1",
     "tui-editor-plugin-font-size": "^1.0.4",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^5.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -69,6 +70,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
     "globals": "^15.13.0",
+    "msw": "^2.6.9",
     "prettier": "^3.4.2",
     "typescript-eslint": "^8.17.0"
   }

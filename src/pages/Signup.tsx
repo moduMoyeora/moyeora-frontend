@@ -1,6 +1,6 @@
-import './signup.css'
+import './Signup.css'
 
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import { checkEmail, checkNickname, signup } from '../api/auth.api'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -33,23 +33,22 @@ export default function Signup() {
       setIsNicknameValid(false)
     }
   }
-  const handleCheckNickname = () => {
-    axios
-      .post(`/users/check-nickname`, {
-        nickname: nickname,
-      })
-      .then((res) => {
-        if (res.status === 200 || res.status === 201) {
-          setIsNicknameChecked(true)
-          alert('사용 가능한 닉네임입니다.')
-        } else {
-          setIsNicknameChecked(false)
-          alert('이미 사용중인 닉네임입니다.')
-        }
-      })
+  const handleCheckNickname = async () => {
+    try {
+      const res = await checkNickname(nickname)
+      if (res.status === 200 || res.status === 201) {
+        setIsNicknameChecked(true)
+        alert('사용 가능한 닉네임입니다.')
+      } else {
+        setIsNicknameChecked(false)
+        alert('이미 사용중인 닉네임입니다.')
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  const validateEmail = (email: string) => {
+  const validateEmail = async (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     setEmail(email)
     if (emailRegex.test(email)) {
@@ -60,12 +59,9 @@ export default function Signup() {
     }
   }
 
-  const handleCheckEmail = () => {
-    axios
-      .post(`/users/check-email`, {
-        email: email,
-      })
-      .then((res) => {
+  const handleCheckEmail = async () => {
+    try {
+      checkEmail(email).then((res) => {
         if (res.status === 200) {
           setIsEmailChecked(true)
           alert('사용 가능한 이메일입니다.')
@@ -74,7 +70,11 @@ export default function Signup() {
           alert('이미 사용중인 이메일입니다.')
         }
       })
+    } catch (error) {
+      console.log(error)
+    }
   }
+
   const validatePassword = (password: string) => {
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/
     setPassword(password)
@@ -85,21 +85,21 @@ export default function Signup() {
     }
   }
   const handleSignup = () => {
-    if (isPasswordValid && isNicknameValid && isEmailValid) {
-      axios
-        .post(`/users/signup`, {
-          nickname: nickname,
-          email: email,
-          password: password,
-        })
-        .then((res) => {
+    try {
+      if (isPasswordValid && isNicknameValid && isEmailValid) {
+        signup(nickname, email, password).then((res) => {
           if (res.status === 200 || res.status === 201) {
             alert('회원가입 완료')
             navigate('/login')
+          } else {
+            alert('회원가입 실패')
           }
         })
-    } else {
-      alert('모든 항목 형식을 지켜 채워주세요.')
+      } else {
+        alert('모든 항목 형식을 지켜 채워주세요.')
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -114,7 +114,7 @@ export default function Signup() {
         Sign up
       </Typography>
       <Card className="signup-card" variant="outlined">
-        <Box component="form" className="signup-test">
+        <Box component="form" className="signup-box">
           <div className="signup-row">
             <TextField
               error={!isNicknameValid && nickname.length > 0}
