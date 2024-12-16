@@ -1,42 +1,90 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { http } from '../api/http'
+import parse from 'html-react-parser' //HTML 문자열을 React 에서 렌더링하기
+import {
+  Box,
+  Typography,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@mui/material'
+import { styled } from '@mui/system'
+import { PiDotsThreeCircleVerticalThin } from 'react-icons/pi'
 
 interface PostData {
-  title: string
-  author: string
-  content: string
-  createdAt: string
+  data: {
+    board_name: string
+    title: string
+    author: string
+    content: string
+    created_at: string
+  }
 }
 
+const ContentContainer = styled(Box)(({ theme }) => ({
+  maxWidth: '800px', // 또는 원하는 최대 너비
+  margin: '0 auto', // 가운데 정렬
+  padding: theme.spacing(3),
+}))
+
+const HeaderBox = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+}))
+
+const AuthorTimeBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between', // 변경
+  marginTop: theme.spacing(1)
+}))
+
 const Post: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
+  const { id, boardId } = useParams<{ id: string; boardId: string }>()
   const [postData, setPostData] = useState<PostData | null>(null)
   const [error, setError] = useState<string>('')
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //드롭다운 메뉴의 위치와 표시 여부를 제어
+  const open = Boolean(anchorEl)
+  const navigate = useNavigate()
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+  const handleEdit = () => {
+    // 게시글 편집
+    handleClose()
+    navigate(`/boards/${boardId}/posts/${id}/edit`)
+  }
+  const handleDelete = async () => {
+    try {
+      await http.delete(`/boards/${boardId}/posts/${id}`)
+      alert('게시글이 삭제되었습니다.')
+      navigate('/')
+    } catch (error) {
+      console.error('Error:', error)
+      alert('게시글 삭제에 실패했습니다.')
+    }
+    handleClose() // 메뉴 닫기
+  }
 
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/posts/${id}`)
-        if (!response.ok) {
-          if (response.status === 404) {
-            setError('게시물을 찾을 수 없습니다.')
-          } else if (response.status === 500) {
-            setError('서버 오류가 발생했습니다.')
-          } else {
-            setError('요청 데이터가 유효하지 않습니다.')
-          }
-          return
-        }
-        const data = await response.json()
-        setPostData(data)
+        const response = await http.get(`/boards/${boardId}/posts/${id}`)
+        console.log(response.data)
+        setPostData(response.data)
       } catch (error) {
-        console.error('Error fetching post data:', error)
-        setError('서버와의 연결에 문제가 발생했습니다.')
+        setError('게시물을 불러오는데 실패했습니다.')
+        console.error('Error:', error)
       }
     }
 
     fetchPostData()
-  }, [id])
+  }, [id, boardId])
 
   // 데이터 가져오는 중
   if (!postData && !error) {
@@ -49,25 +97,90 @@ const Post: React.FC = () => {
   }
 
   // 서버에서 데이터 가져와서 게시물 보여줌
-  const { title, author, content, createdAt } = postData!
-  const formattedCreatedAt = createdAt || '작성 시간 정보가 없습니다.' // default 값 설정 해둠
+  const { data } = postData!
+  const { board_name, title, author, content, created_at } = data
+  const formattedCreatedAt = created_at || '작성 시간 정보가 없습니다.' // default 값 설정 해둠
+  const formatDate = (dateString: string) => {
+    //created_at 시간 형식 변경 함수
+    const date = new Date(dateString)
+    return date.toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
+  }
+  const date = formatDate(formattedCreatedAt)
 
   return (
-    <div className="result-container">
-      <div className="header">
-        <h1>{title}</h1>
-        <div className="author-time-container">
-          <h3>{author}</h3>
-          <h3>{formattedCreatedAt}</h3>
-        </div>
-      </div>
+    <ContentContainer>
+      <HeaderBox>
+        <Typography
+          variant="subtitle1"
+          color="text.secondary"
+          sx={{ marginBottom: 2 }}
+        >
+          {board_name}
+        </Typography>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ fontWeight: 'bold' }}
+        >
+          {title}
+        </Typography>
+        <AuthorTimeBox>
+          <Box display="flex" alignItems="center">
+            <Typography variant="body2" color="text.secondary">
+              {author}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+              {date}
+            </Typography>
+          </Box>
+          <Box>
+            {/* 메뉴를 열기 위한 아이콘 버튼 */}
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <PiDotsThreeCircleVerticalThin size={24} color="text.secondary" />
+            </IconButton>
+            {/* 드롭다운 메뉴 컴포넌트 */}
+            <Menu
+              id="long-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <MenuItem onClick={handleEdit}>수정하기</MenuItem>
+              <MenuItem onClick={handleDelete}>삭제하기</MenuItem>
+            </Menu>
+          </Box>
+        </AuthorTimeBox>
+      </HeaderBox>
 
-      <div className="separator"></div>
-      <div>
-        <h4>작성 내용</h4>
-        <textarea className="result" value={content} readOnly />
-      </div>
-    </div>
+      <Divider />
+
+      <Box mt={2}>
+        <Typography component="div" className="result">
+          {parse(content)}
+        </Typography>
+      </Box>
+    </ContentContainer>
   )
 }
 
