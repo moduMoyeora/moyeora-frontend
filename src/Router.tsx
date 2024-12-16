@@ -1,16 +1,23 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
 import App from './App'
 import Home from './pages/home'
-import TuiEditor from './components/Editor'
+import Login from './pages/Login'
+import NavBar from './components/Navbar'
 import React from 'react'
+import Signup from './pages/Signup'
+import TuiEditor from './components/Editor'
 
 const Router: React.FC = () => {
   return (
     <BrowserRouter>
+      <NavBar />
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/posts" element={<TuiEditor />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         {/* <Route path="/post_temp" element={<Post />} /> */}
       </Routes>
     </BrowserRouter>

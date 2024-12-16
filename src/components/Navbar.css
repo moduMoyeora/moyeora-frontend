@@ -1,0 +1,45 @@
+.navbar {
+  width: 100%;
+  height: 5%;
+  background-color: black;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-title {
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+  margin-left: 10px;
+}
+
+.navbar-menus {
+  display: flex;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+.navbar-Menus .navbar-menu {
+  text-decoration: none;
+  color: white;
+  margin-left: 15px;
+}
+
+.navbar-Login {
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.navbar-Login .navbar-menu {
+  text-decoration: none;
+  color: white;
+}
