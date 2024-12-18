@@ -33,8 +33,8 @@ export const useAuthStore = create<StoreState>((set) => ({
   storeLogin: (token: string) => {
     setToken(token)
     set({ isLoggedIn: true })
-    const decoded = jwtDecode<JwtPayload>(token)
-    localStorage.setItem('user_id', decoded.user_id)
+    // const decoded = jwtDecode<JwtPayload>(token)
+    // localStorage.setItem('user_id', decoded.user_id)
   },
   storeLogout: () => {
     removeToken()

@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { getToken, removeToken } from '../store/authStore'
 
-const BASE_URL = '//dev-moyeora.glitch.me'
+const BASE_URL = 'http://dev-moyeora.glitch.me'
 const DEFAULT_TIMEOUT = 30000
 
 export const createClient = (config?: AxiosRequestConfig) => {
@@ -10,7 +10,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
     timeout: DEFAULT_TIMEOUT,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: getToken() ? `Bearer ${getToken()}` : '',
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
     withCredentials: true,
     ...config,
@@ -18,7 +18,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response.status === 401) {
+      if (error.response.status === 403) {
         removeToken()
         window.location.href = '/login'
         return

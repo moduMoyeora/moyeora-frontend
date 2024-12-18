@@ -1,7 +1,9 @@
 .App {
   text-align: center;
-  margin-top: 50px;
-  background-color: orange;
+  padding-top: 60px;
+  background-color: white;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .App-logo {
@@ -18,12 +20,6 @@
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -38,6 +34,17 @@
     transform: rotate(360deg);
   }
 }
+
 .page {
   background-color: white;
+}
+
+@media (max-width: 600px) {
+  .App {
+    padding-top: 60px;
+  }
+
+  .App-header {
+    padding: 20px;
+  }
 }
