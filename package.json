@@ -67,6 +67,7 @@
     "@babel/plugin-transform-private-property-in-object": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
     "@eslint/js": "^9.16.0",
+    "@types/react-router-dom": "^5.3.3",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
