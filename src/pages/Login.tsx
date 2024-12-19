@@ -1,6 +1,5 @@
 import './Signup.css'
 
-import { JwtPayload, jwtDecode } from 'jwt-decode'
 import { useEffect, useState } from 'react'
 
 import Alert from '@mui/material/Alert'
@@ -71,16 +70,14 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      // if (email === '' || password === '') {
-      //   setErrorMessage('이메일 또는 비밀번호를 입력해주세요.')
-      //   return
-      // }
-      // if (!isEmailValid || !isPasswordValid) {
-      //   setErrorMessage('형식을 지켜 다시 입력해주세요.')
-      //   return
-      // }
-      // console.log(isLoggedIn)
-      //백엔드 배포 후 주석 해제
+      if (email === '' || password === '') {
+        setErrorMessage('이메일 또는 비밀번호를 입력해주세요.')
+        return
+      }
+      if (!isEmailValid || !isPasswordValid) {
+        setErrorMessage('형식을 지켜 다시 입력해주세요.')
+        return
+      }
       const res = await login(email, password)
       const token = getCookie('authToken')
       if (token) {
@@ -88,7 +85,6 @@ export default function Login() {
       }
       if (res.status === 200 || res.status === 201) {
         alert('로그인 완료')
-
         navigate('/')
       } else if (res.status === 401) {
         setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.')
@@ -194,7 +190,6 @@ export default function Login() {
             variant="contained"
             style={{
               marginTop: '20px',
-
               backgroundColor: 'black',
             }}
             onClick={handleLogin}
