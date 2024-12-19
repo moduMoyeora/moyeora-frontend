@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "nickname": "test",
+      "email": "test@test.com",
+      "password": "test2",
+      "realname": "ㅇㅇ",
+      "description": "ㄹㅇㅁㄴㄹㅇㄶㅇㅁㄶㄴㅇㅎㅁㅎㅇㅁㄶ",
+      "gender": "여자",
+      "age": "341",
+      "regions": "ㅇㅊㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ",
+      "id": "1",
+      "undefined": "male"
+    }
+  ]
+}
