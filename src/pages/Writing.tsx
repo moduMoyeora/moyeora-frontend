@@ -1,8 +1,9 @@
-import { Controller, useForm } from 'react-hook-form'
-import TuiEditor from '../components/Editor'
 import { Box, Button, Divider, TextField, Typography } from '@mui/material'
-import { useRef, useState, useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useEffect, useRef, useState } from 'react'
+
 import { Editor } from '@toast-ui/react-editor'
+import TuiEditor from '../components/Editor'
 
 interface Inputs {
   title: string

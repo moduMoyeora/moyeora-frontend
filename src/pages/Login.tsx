@@ -27,6 +27,13 @@ export interface LoginProps {
   email: string
   password: string
 }
+function getCookie(name: string): string | null {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop()?.split(';').shift() ?? null
+  return null
+}
+
 const cookies = new Cookies()
 export default function Login() {
   const { isLoggedIn, storeLogin, storeLogout } = useAuthStore()
@@ -63,40 +70,39 @@ export default function Login() {
   }
 
   const handleLogin = async () => {
-    // try {
-    // if (email === '' || password === '') {
-    //   setErrorMessage('이메일 또는 비밀번호를 입력해주세요.')
-    //   return
-    // }
-    // if (!isEmailValid || !isPasswordValid) {
-    //   setErrorMessage('형식을 지켜 다시 입력해주세요.')
-    //   return
-    // }
+    try {
+      // if (email === '' || password === '') {
+      //   setErrorMessage('이메일 또는 비밀번호를 입력해주세요.')
+      //   return
+      // }
+      // if (!isEmailValid || !isPasswordValid) {
+      //   setErrorMessage('형식을 지켜 다시 입력해주세요.')
+      //   return
+      // }
+      // console.log(isLoggedIn)
+      //백엔드 배포 후 주석 해제
+      const res = await login(email, password)
+      const token = getCookie('authToken')
+      if (token) {
+        storeLogin(token)
+      }
+      if (res.status === 200 || res.status === 201) {
+        alert('로그인 완료')
 
-    storeLogin('test')
-    console.log(isLoggedIn)
-    //백엔드 배포 후 주석 해제
-    // const res = await login(email, password)
-
-    // if (res.status === 200 || res.status === 201) {
-    //   alert('로그인 완료')
-    //   // storeLogin('test')
-    //   navigate('/')
-    // } else if (res.status === 401) {
-    //   setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.')
-    // } else if (res.status === 400) {
-    //   setErrorMessage('형식을 지켜 다시 입력해주세요')
-    // } else if (res.status === 500) {
-    //   setErrorMessage('서버 오류가 발생했습니다.')
-    // } else {
-    //   alert('로그인에 실패했습니다.')
-    // }
-    // } catch (err: any) {
-    //   console.error('Error setting up request:', err.message)
-    //   setErrorMessage('요청 처리 중 다른 문제가 발생했습니다.')
-    // }
-    alert('로그인 완료')
-    navigate('/')
+        navigate('/')
+      } else if (res.status === 401) {
+        setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.')
+      } else if (res.status === 400) {
+        setErrorMessage('형식을 지켜 다시 입력해주세요')
+      } else if (res.status === 500) {
+        setErrorMessage('서버 오류가 발생했습니다.')
+      } else {
+        alert('로그인에 실패했습니다.')
+      }
+    } catch (err: any) {
+      console.error('Error setting up request:', err.message)
+      setErrorMessage('요청 처리 중 다른 문제가 발생했습니다.')
+    }
   }
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 

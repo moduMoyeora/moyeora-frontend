@@ -29,16 +29,15 @@ import {
   FaUser,
 } from 'react-icons/fa'
 import { FaMapLocationDot, FaRegMessage } from 'react-icons/fa6'
+import { getUser, updateUser } from '../api/auth.api'
 import { useEffect, useState } from 'react'
 
 import { BsGenderAmbiguous } from 'react-icons/bs'
-import { Unstable_NumberInput as NumberInput } from '@mui/base'
 import { User } from '../model/users'
-import axios from 'axios'
-import { updateUser } from '../api/auth.api'
 import { useAuthStore } from '../store/authStore'
 
 export default function MyPage() {
+  const { user_id, isLoggedIn } = useAuthStore()
   const [open, setOpen] = useState(false)
   const [alert, setAlert] = useState(false)
   const [alertOption, setAlertOption] = useState({
@@ -54,19 +53,25 @@ export default function MyPage() {
     regions: '',
   })
   const [editUser, setEditUser] = useState<User>(user)
-  const user_id = 1
 
   const getUserInformation = async () => {
-    //const response = await getUser(user_id.toString())
-    const response = await axios.get(`http://localhost:3000/users/1`)
-    if (response.status === 200) {
-      setUser(response.data)
+    if (user_id) {
+      try {
+        const response = await getUser(user_id)
+        if (response.status === 200) {
+          setUser(response.data)
+        }
+      } catch (error) {
+        console.error('Error fetching user information:', error)
+      }
     }
   }
 
   useEffect(() => {
-    getUserInformation()
-  }, [])
+    if (isLoggedIn) {
+      getUserInformation()
+    }
+  }, [isLoggedIn, user_id])
 
   const handleClose = () => {
     setOpen(false)
@@ -90,24 +95,32 @@ export default function MyPage() {
   }
   const handleChange = () => {}
   const handleSave = async () => {
-    const response = await axios.put(`http://localhost:3000/users/1`, editUser)
-    if (response.status === 200) {
-      setAlertOption({
-        severity: 'success',
-        value: '저장되었습니다.',
-      })
-      setUser(response.data)
+    // const user_id = State
+    if (user_id) {
+      try {
+        const response = await updateUser(user_id.toString(), editUser)
+        if (response.status === 200) {
+          setAlertOption({
+            severity: 'success',
+            value: '저장되었습니다.',
+          })
+          setUser(response.data)
+        } else {
+          setAlertOption({
+            severity: 'error',
+            value: '저장 실패',
+          })
+        }
+        setAlert(true)
+        updateUser(user_id.toString(), user)
+        setOpen(false)
+      } catch (error) {
+        console.log(error)
+      }
     } else {
-      setAlertOption({
-        severity: 'error',
-        value: '저장 실패',
-      })
+      console.log('유저 아이디 없음')
     }
-    setAlert(true)
-    //updateUser(user_id.toString(), user)
-    setOpen(false)
   }
-
   const handleEdit = () => {
     setEditUser({ ...user })
     setOpen(true)

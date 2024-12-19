@@ -7,6 +7,11 @@ import ReactDOM from 'react-dom/client'
 import Router from './Router'
 import reportWebVitals from './reportWebVitals'
 
+if (process.env.NODE_ENV === 'development') {
+  const { worker } = require('./mocks/browser')
+  worker.start()
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 const queryClient = new QueryClient()
