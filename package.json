@@ -5,6 +5,8 @@
   "dependencies": {
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
+    "@mui/base": "^5.0.0-beta.67",
+    "@mui/icons-material": "^6.2.0",
     "@mui/material": "^6.1.10",
     "@mui/x-date-pickers": "^7.23.2",
     "@tanstack/react-query": "^5.62.2",
@@ -23,16 +25,20 @@
     "date-fns": "^3.2.0",
     "dayjs": "^1.11.13",
     "html-react-parser": "^5.2.1",
+    "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
+    "react-cookie": "^7.2.2",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.0",
     "react-icons": "^5.4.0",
     "react-router-dom": "^7.0.2",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "tui-editor-plugin-font-size": "^1.0.4",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^5.0.2"
   },
+  "proxy": "http://dev-moyeora.glitch.me",
   "scripts": {
     "start": "react-scripts start",
     "winstart": "set \"GENERATE_SOURCEMAP=false\" && react-scripts start",
@@ -65,6 +71,7 @@
     "@babel/plugin-transform-private-property-in-object": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
     "@eslint/js": "^9.16.0",
+    "@types/react-router-dom": "^5.3.3",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
@@ -72,7 +79,14 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
     "globals": "^15.13.0",
+    "msw": "^2.7.0",
     "prettier": "^3.4.2",
     "typescript-eslint": "^8.17.0"
+  },
+  "homepage": "/",
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
