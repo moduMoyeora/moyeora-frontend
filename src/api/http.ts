@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { getToken, removeToken, useAuthStore } from '../store/authStore'
 
-const BASE_URL = 'http://dev-moyeora.glitch.me'
+const BASE_URL = 'https://dev-moyeora.glitch.me'
 const DEFAULT_TIMEOUT = 30000
 
 export const createClient = (config?: AxiosRequestConfig) => {
@@ -40,4 +40,3 @@ export const createClient = (config?: AxiosRequestConfig) => {
   )
   return axiosInstance
 }
-export const httpClient = createClient();
