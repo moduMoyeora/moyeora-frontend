@@ -26,11 +26,25 @@ function decodeToken(token: string): JwtPayload {
   }
 }
 
-export const getToken = () => localStorage.getItem('token')
+export const getToken = () => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    console.log('토큰이 존재하지 않습니다.')
+    return null
+  }
+  return token
+}
 
 export const setToken = (token: string) => localStorage.setItem('token', token)
 
-export const removeToken = () => localStorage.removeItem('token')
+export const removeToken = () => {
+  if (localStorage.getItem('token')) {
+    localStorage.removeItem('token')
+  } else {
+    console.log('토큰이 존재하지 않습니다.')
+    return null
+  }
+}
 
 export const getUserId = () => {
   return localStorage.getItem('user_id')

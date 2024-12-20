@@ -10,6 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import React from 'react'
 import Signup from './pages/Signup'
 import Home from './pages/Home'
+import Comment from './components/Comment'
 
 const Router: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const Router: React.FC = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/boards/:boardId/posts/:id" element={<Post />} />
+        <Route path="/comment" element={<Comment />} />
         // login 필요한 페이지인 경우 아래에 넣으세요.
         <Route element={<ProtectedRoute />}>
           <Route path="/boards/:boardId/posts" element={<CreatePost />} />

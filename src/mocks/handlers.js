@@ -15,17 +15,6 @@ export const handlers = [
       })
     }
   ),
-  http.options('/users/login', async () => {
-    return HttpResponse.text('', {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': 'http://your-frontend-domain.com',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        // Intentionally missing Access-Control-Allow-Headers
-      },
-    })
-  }),
-  ,
   http.get('https://dev-moyeora.glitch.me/users/profile/:id', ({ params }) => {
     const { id } = params
     return Response.json({
