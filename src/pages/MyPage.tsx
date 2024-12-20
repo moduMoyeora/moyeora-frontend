@@ -7,9 +7,7 @@ import {
   Container,
   Dialog,
   DialogActions,
-  DialogContent,
   DialogTitle,
-  FormControl,
   Grid,
   MenuItem,
   Paper,
@@ -21,13 +19,7 @@ import {
   Typography,
   selectClasses,
 } from '@mui/material'
-import {
-  FaEdit,
-  FaEnvelope,
-  FaLessThanEqual,
-  FaLock,
-  FaUser,
-} from 'react-icons/fa'
+import { FaEdit, FaUser } from 'react-icons/fa'
 import { FaMapLocationDot, FaRegMessage } from 'react-icons/fa6'
 import { getUser, updateUser } from '../api/auth.api'
 import { useEffect, useState } from 'react'
@@ -35,8 +27,10 @@ import { useEffect, useState } from 'react'
 import { BsGenderAmbiguous } from 'react-icons/bs'
 import { User } from '../model/users'
 import { useAuthStore } from '../store/authStore'
+import { useNavigate } from 'react-router-dom'
 
 export default function MyPage() {
+  const navigate = useNavigate()
   const { user_id, isLoggedIn } = useAuthStore()
   const [open, setOpen] = useState(false)
   const [alert, setAlert] = useState(false)

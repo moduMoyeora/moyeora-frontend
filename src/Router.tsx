@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import MyPage from './pages/MyPage'
 import NavBar from './components/Navbar'
+import ProtectedRoute from './components/ProtectedRoute'
 import React from 'react'
 import Signup from './pages/Signup'
 import TuiEditor from './components/Editor'
@@ -18,8 +19,10 @@ const Router: React.FC = () => {
         <Route path="/posts" element={<TuiEditor />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/writing" element={<Writing />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/writing" element={<Writing />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )
