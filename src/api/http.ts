@@ -39,5 +39,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
     }
   )
   return axiosInstance
+
 }
 export const httpClient = createClient()
+
