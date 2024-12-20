@@ -8,6 +8,7 @@
     "@mui/base": "^5.0.0-beta.67",
     "@mui/icons-material": "^6.2.0",
     "@mui/material": "^6.1.10",
+    "@mui/x-date-pickers": "^7.23.2",
     "@tanstack/react-query": "^5.62.2",
     "@tanstack/react-query-devtools": "^5.62.2",
     "@testing-library/jest-dom": "^5.17.0",
@@ -21,6 +22,9 @@
     "@types/react": "^18.3.13",
     "@types/react-dom": "^18.3.1",
     "axios": "^1.7.9",
+    "date-fns": "^3.2.0",
+    "dayjs": "^1.11.13",
+    "html-react-parser": "^5.2.1",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-cookie": "^7.2.2",
@@ -34,7 +38,7 @@
     "web-vitals": "^2.1.4",
     "zustand": "^5.0.2"
   },
-  "proxy": "http://dev-moyeora.glitch.me",
+  "proxy": "https://dev-moyeora.glitch.me",
   "scripts": {
     "start": "react-scripts start",
     "winstart": "set \"GENERATE_SOURCEMAP=false\" && react-scripts start",

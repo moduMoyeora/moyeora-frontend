@@ -1,19 +1,22 @@
 import { HttpResponse, http } from 'msw'
 
 export const handlers = [
-  http.post('http://dev-moyeora.glitch.me/users/login', async ({ request }) => {
-    const { email, password } = await request.json()
-    console.log(email, password)
-    return new HttpResponse(null, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Set-Cookie':
-          'authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywibmlja05hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM0NjA1NjQxLCJleHAiOjYxNzM0NjA1NjQxLCJpc3MiOiJtb3llb3JhLXNlcnZlciJ9.Ps_9R_a1QFIe8_L5VEF0OZCL_oXlohQOtRVycubAN5M',
-      },
-    })
-  }),
-  http.get('http://dev-moyeora.glitch.me/users/profile/:id', ({ params }) => {
+  http.post(
+    'https://dev-moyeora.glitch.me/users/login',
+    async ({ request }) => {
+      const { email, password } = await request.json()
+      console.log(email, password)
+      return new HttpResponse(null, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Set-Cookie':
+            'authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywibmlja05hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM0NjA1NjQxLCJleHAiOjYxNzM0NjA1NjQxLCJpc3MiOiJtb3llb3JhLXNlcnZlciJ9.Ps_9R_a1QFIe8_L5VEF0OZCL_oXlohQOtRVycubAN5M',
+        },
+      })
+    }
+  ),
+  http.get('https://dev-moyeora.glitch.me/users/profile/:id', ({ params }) => {
     const { id } = params
     console.log(id)
     return Response.json({
@@ -21,7 +24,7 @@ export const handlers = [
       nickname: 'testName',
     })
   }),
-  http.get('http://dev-moyeora.glitch.me/users/check', ({ request }) => {
+  http.get('https://dev-moyeora.glitch.me/users/check', ({ request }) => {
     const url = new URL(request.url)
     const field = url.searchParams.get('field')
     const value = url.searchParams.get('value')
@@ -52,14 +55,14 @@ export const handlers = [
   }),
 
   http.put(
-    'http://dev-moyeora.glitch.me/users/profile/:id',
+    'https://dev-moyeora.glitch.me/users/profile/:id',
     async ({ request }) => {
       const User = await request.json()
       return Response.json(User)
     }
   ),
 
-  http.post('http://dev-moyeora.glitch.me/users/join', async ({ request }) => {
+  http.post('https://dev-moyeora.glitch.me/users/join', async ({ request }) => {
     try {
       const userData = await request.json()
       const { email, password, nickname } = userData
