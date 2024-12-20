@@ -1,13 +1,15 @@
 import './Navbar.css'
 
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Typography } from '@mui/material'
 import { useAuthStore } from '../store/authStore'
 import { useState } from 'react'
 
-const categories = [{ name: '글쓰기', path: '/boards/:boardId/posts' }]
-
 export default function NavBar() {
+  const { boardId } = useParams<{boardId: string}>(); 
+  const categories = [
+    { name: '글쓰기', path: `/boards/${boardId}/posts` }
+  ]
   const { isLoggedIn, storeLogout } = useAuthStore()
   const [isOpen, setIsOpen] = useState(false)
 
