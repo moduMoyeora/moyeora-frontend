@@ -8,8 +8,7 @@ import { useState } from 'react'
 export default function NavBar() {
   const { boardId } = useParams<{boardId: string}>(); 
   const categories = [
-    { name: '글쓰기', path: `/boards/${boardId}/posts` },
-    { name: '채팅', path: '/chat' },
+    { name: '글쓰기', path: `/boards/${boardId}/posts` }
   ]
   const { isLoggedIn, storeLogout } = useAuthStore()
   const [isOpen, setIsOpen] = useState(false)

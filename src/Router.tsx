@@ -20,7 +20,7 @@ const Router: React.FC = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/boards/:boardId/posts/:id" element={<Post />} />
-        {/* login 필요한 페이지인 경우 */}
+        // login 필요한 페이지인 경우 아래에 넣으세요.
         <Route element={<ProtectedRoute />}>
           <Route path="/boards/:boardId/posts" element={<CreatePost />} />
           <Route
