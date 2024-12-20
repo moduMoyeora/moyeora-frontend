@@ -5,10 +5,7 @@ import { Typography } from '@mui/material'
 import { useAuthStore } from '../store/authStore'
 import { useState } from 'react'
 
-const categories = [
-  { name: '게시판', path: '/boards/:boardId/posts' },
-  { name: '채팅', path: '/chat' },
-]
+const categories = [{ name: '글쓰기', path: '/boards/:boardId/posts' }]
 
 export default function NavBar() {
   const { isLoggedIn, storeLogout } = useAuthStore()
