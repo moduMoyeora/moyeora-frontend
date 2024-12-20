@@ -15,6 +15,8 @@ import 'dayjs/locale/ko'
 import { Dayjs } from 'dayjs'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { Controller, useForm } from 'react-hook-form'
+import { createClient } from '../api/http'
+import { useNavigate, useParams } from 'react-router-dom'
 
 interface FormInputs {
   location: string
@@ -33,22 +35,38 @@ function Events() {
       date: null,
       time: null,
     },
-  })
+  });
 
-  const onSubmit = (data: FormInputs) => {
-    const combinedDateTime = data.date
-    ?.hour(data.time?.hour() || 0)
-    ?.minute(data.time?.minute() || 0)
-    ?.second(0)
-    ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  const client = createClient();
+  const navigate = useNavigate();
+  const { boardId, id } = useParams<{ boardId: string; id: string }>();
 
-    // 백엔드로 보낼 데이터 형식
-    const submitData = {
-      location: data.location,
-      time: combinedDateTime
-    };
+  const onSubmit = async (data: FormInputs) => {
+    try {
+      const combinedDateTime = data.date
+        ?.hour(data.time?.hour() || 0)
+        ?.minute(data.time?.minute() || 0)
+        ?.second(0)
+        ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
 
-     console.log(submitData);
+      // 백엔드로 보낼 데이터 형식
+      const submitData = {
+        location: data.location,
+        time: combinedDateTime,
+      }
+      console.log(submitData)
+
+      const response = await client.post(
+        `/boards/${boardId}/posts/${id}/events`
+      )
+      console.log('Server response:', response.data)
+
+      alert('모임 일정 등록 성공!')
+      navigate(`/boards/${boardId}/posts/${id}`) // 모임 일정 등록 완료 후 게시글 상세 페이지로 이동
+    } catch (error) {
+      alert('모임 일정 등록 실패!')
+      console.error('Error:', error)
+    }
   }
 
   return (
@@ -167,7 +185,12 @@ function Events() {
             </LocalizationProvider>
           </Stack>
 
-          <Button type="submit" variant="contained" size="large" sx={{ mt: 2 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            sx={{ mt: 2, backgroundColor: 'black' }}
+          >
             작성하기
           </Button>
         </form>
@@ -176,4 +199,4 @@ function Events() {
   )
 }
 
-export default Events;
+export default Events

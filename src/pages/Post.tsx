@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { httpClient } from '../api/http'
+import { createClient} from '../api/http'
 import parse from 'html-react-parser' //HTML 문자열을 React 에서 렌더링하기
 import {
   Box,
@@ -47,6 +47,7 @@ const Post: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //드롭다운 메뉴의 위치와 표시 여부를 제어
   const open = Boolean(anchorEl)
   const navigate = useNavigate()
+  const client = createClient();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -61,7 +62,7 @@ const Post: React.FC = () => {
   }
   const handleDelete = async () => {
     try {
-      await httpClient.delete(`/boards/${boardId}/posts/${id}`)
+      await client.delete(`/boards/${boardId}/posts/${id}`)
       alert('게시글이 삭제되었습니다.')
       navigate('/')
     } catch (error) {
@@ -74,7 +75,7 @@ const Post: React.FC = () => {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await httpClient.get(`/boards/${boardId}/posts/${id}`)
+        const response = await client.get(`/boards/${boardId}/posts/${id}`)
         console.log(response.data)
         setPostData(response.data)
       } catch (error) {
