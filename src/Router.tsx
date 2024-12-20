@@ -33,7 +33,7 @@ const Router: React.FC = () => {
             element={<EditPost />}
           />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="/boards/:boardId/posts" element={<PostList />} />
+          <Route path="/boards/:boardId" element={<PostList />} />
         </Route>
       </Routes>
     </BrowserRouter>

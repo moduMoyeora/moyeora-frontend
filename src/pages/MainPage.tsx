@@ -151,7 +151,7 @@ const MainPage: React.FC = () => {
             >
               <Typography variant="h6" sx={{ marginBottom: 2 }}>
                 <Link
-                  to={`/boards/${item.id}/posts`} // 게시판 제목을 클릭하면 해당 게시판으로 이동
+                  to={`/boards/${item.id}`} // 게시판 제목을 클릭하면 해당 게시판으로 이동
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   {item.title}
