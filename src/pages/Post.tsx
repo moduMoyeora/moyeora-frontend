@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { http } from '../api/http'
+import { httpClient } from '../api/http'
 import parse from 'html-react-parser' //HTML 문자열을 React 에서 렌더링하기
 import {
   Box,
@@ -61,7 +61,7 @@ const Post: React.FC = () => {
   }
   const handleDelete = async () => {
     try {
-      await http.delete(`/boards/${boardId}/posts/${id}`)
+      await httpClient.delete(`/boards/${boardId}/posts/${id}`)
       alert('게시글이 삭제되었습니다.')
       navigate('/')
     } catch (error) {
@@ -74,7 +74,7 @@ const Post: React.FC = () => {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await http.get(`/boards/${boardId}/posts/${id}`)
+        const response = await httpClient.get(`/boards/${boardId}/posts/${id}`)
         console.log(response.data)
         setPostData(response.data)
       } catch (error) {
