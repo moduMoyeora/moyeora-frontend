@@ -21,7 +21,7 @@ function CreatePost() {
       
       // 서버 응답에서 생성된 게시글의 ID를 받아옴
       const newPostId = response.data.id;
-      navigate(`/boards/${boardId}/posts/${newPostId}`);
+      navigate(`/boards/${boardId}/posts/${newPostId}/events`); // 이벤트 작성 페이지로 이동
     } catch (error) {
       console.log("Error: ",error);
     }
@@ -30,7 +30,7 @@ function CreatePost() {
   return (
     <PostForm
       onSubmit={handleSubmit}
-      submitButtonText="작성하기"
+      submitButtonText="다음"
     />
   );
 }

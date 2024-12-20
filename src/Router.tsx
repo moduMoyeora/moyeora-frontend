@@ -3,6 +3,7 @@ import App from './App'
 import Post from './pages/Post'
 import CreatePost from './pages/createPost'
 import EditPost from './pages/EditPost'
+import Events from './pages/Events'
 
 const Router: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const Router: React.FC = () => {
         <Route path="/boards/:boardId/posts" element={<CreatePost />} />
         <Route path="/boards/:boardId/posts/:id/edit" element={<EditPost />} />
         <Route path="/boards/:boardId/posts/:id" element={<Post />} />
+        <Route path="/boards/:boardId/posts/:id/events" element={<Events />} />
       </Routes>
     </BrowserRouter>
   )
