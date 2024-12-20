@@ -55,7 +55,6 @@ export default function Signup() {
 
   const isDuplicateEmail = async (field: string, value: string) => {
     try {
-      console.log(field, value)
       const response = await checkForSignup(field, value)
       const isDuplicate = response.data.isDuplicate
       if (response.status === 200 || response.status === 201) {
