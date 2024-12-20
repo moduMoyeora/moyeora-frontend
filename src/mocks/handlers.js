@@ -14,11 +14,43 @@ export const handlers = [
     })
   }),
   http.get('http://dev-moyeora.glitch.me/users/profile/:id', ({ params }) => {
+    const { id } = params
+    console.log(id)
     return Response.json({
       id: params.id,
       nickname: 'testName',
     })
   }),
+  http.get('http://dev-moyeora.glitch.me/users/check', ({ request }) => {
+    const url = new URL(request.url)
+    const field = url.searchParams.get('field')
+    const value = url.searchParams.get('value')
+
+    console.log({ field, value }) // 디버깅용 출력
+
+    if (value === 'aa@gmail.com' && field === 'email') {
+      return new HttpResponse(JSON.stringify({ isDuplicate: 'true' }), {
+        status: 200,
+        statusText: 'duplicate email',
+      })
+    }
+    if (field === 'nickname') {
+      return new HttpResponse(JSON.stringify({ isDuplicate: 'false' }), {
+        status: 200,
+      })
+    }
+    if (field === 'email') {
+      return new HttpResponse(JSON.stringify({ isDuplicate: 'false' }), {
+        status: 200,
+        statusText: 'duplicate nickname',
+      })
+    }
+    return new HttpResponse(null, {
+      status: 404,
+      statusText: 'error',
+    })
+  }),
+
   http.put(
     'http://dev-moyeora.glitch.me/users/profile/:id',
     async ({ request }) => {
@@ -27,25 +59,42 @@ export const handlers = [
     }
   ),
 
-  // 요청 내용 확인
+  http.post('http://dev-moyeora.glitch.me/users/join', async ({ request }) => {
+    try {
+      const userData = await request.json()
+      const { email, password, nickname } = userData
 
-  //
+      // 간단한 유효성 검사
+      if (!email || !password || !nickname) {
+        return new HttpResponse(
+          JSON.stringify({ message: '요청 데이터가 유효하지 않습니다' }),
+          {
+            status: 400,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+      }
 
-  //   // 간단한 로그인 로직 모킹
-  //   if (email === 'test@gmail.com' && password === 'test1234@') {
-  //     return res(
-  //       // 성공 응답
-  //       ctx.status(200),
-  //       ctx.json({ message: 'Login successful' }),
-  //       // Set-Cookie 헤더 추가
-  //       ctx.set(
-  //         'Set-Cookie',
-  //         'authorization=mockToken123; Path=/; HttpOnly; Secure'
-  //       )
-  //     )
-  //   }
-
-  //   // 실패 응답
-  //   return res(ctx.status(401), ctx.json({ message: 'Invalid credentials' }))
-  // }),
+      // 성공 응답
+      return new HttpResponse(JSON.stringify({ message: '회원가입 완료' }), {
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    } catch (error) {
+      // 서버 에러 응답
+      return new HttpResponse(
+        JSON.stringify({ message: 'Internal Server Error' }),
+        {
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    }
+  }),
 ]

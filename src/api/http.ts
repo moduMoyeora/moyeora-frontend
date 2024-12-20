@@ -31,9 +31,9 @@ export const createClient = (config?: AxiosRequestConfig) => {
     (response) => response,
     (error) => {
       if (error.response.status === 403) {
-        removeToken()
+        useAuthStore.getState().storeLogout()
         window.location.href = '/login'
-        return
+        return Promise.reject(error)
       }
       return Promise.reject(error)
     }

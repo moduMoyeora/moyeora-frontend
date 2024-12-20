@@ -4,38 +4,33 @@ import { create } from 'zustand'
 import { jwtDecode } from 'jwt-decode'
 
 interface StoreState {
+  token: string | null
+  user_id: string | null
   isLoggedIn: boolean
-  user_id: string
-  token: string
   storeLogin: (token: string) => void
   storeLogout: () => void
 }
 
 interface JwtPayload {
   id: string
-  exp: number // expiration time in seconds
+  exp: number
 }
 
 function decodeToken(token: string): JwtPayload {
   try {
-    const decoded: any = jwtDecode(token) // JWT 디코딩
+    const decoded: any = jwtDecode(token)
     return decoded
   } catch (error) {
     console.error('JWT 디코딩 오류:', error)
-    return {} as JwtPayload // 에러 발생 시 빈 객체 반환
+    return {} as JwtPayload
   }
 }
 
-export const getToken = () => {
-  return localStorage.getItem('token')
-}
-const setToken = (token: string) => {
-  localStorage.setItem('token', token)
-}
+export const getToken = () => localStorage.getItem('token')
 
-export const removeToken = () => {
-  localStorage.removeItem('token')
-}
+export const setToken = (token: string) => localStorage.setItem('token', token)
+
+export const removeToken = () => localStorage.removeItem('token')
 
 export const getUserId = () => {
   return localStorage.getItem('user_id')
@@ -49,23 +44,22 @@ interface JwtPayload {
 }
 
 export const useAuthStore = create<StoreState>()(
-  persist(
+  persist<StoreState>(
     (set) => ({
+      token: null,
+      user_id: null,
       isLoggedIn: false,
-      user_id: '',
-      token: '',
       storeLogin: (token: string) => {
         const decoded = decodeToken(token)
-
         if (decoded) {
           const currentTime = Date.now() / 1000
           if (decoded.exp < currentTime) {
             console.warn('Token has already expired.')
-            set(() => ({
+            set({
               isLoggedIn: false,
-              user_id: '',
-              token: '',
-            }))
+              user_id: null,
+              token: null,
+            })
             localStorage.removeItem('token')
             localStorage.removeItem('user_id')
           } else {
@@ -74,15 +68,16 @@ export const useAuthStore = create<StoreState>()(
               user_id: decoded.id,
               token,
             })
-            localStorage.setItem('user_id', decoded.user_id)
+            localStorage.setItem('token', token)
+            localStorage.setItem('user_id', decoded.id)
           }
         }
       },
       storeLogout: () => {
         set({
           isLoggedIn: false,
-          user_id: '',
-          token: '',
+          user_id: null,
+          token: null,
         })
         localStorage.removeItem('token')
         localStorage.removeItem('user_id')
@@ -90,10 +85,7 @@ export const useAuthStore = create<StoreState>()(
     }),
     {
       name: 'auth-storage', // unique name
-      storage: createJSONStorage(() => localStorage), //   (optional) by default, 'localStorage' is used
-      // Optional: Define a version and migrate if necessary
-      // version: 1,
-      // migrate: (persistedState, version) => { return persistedState }
+      storage: createJSONStorage(() => localStorage),
     }
   )
 )

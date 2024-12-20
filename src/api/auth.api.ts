@@ -21,16 +21,12 @@ export const signup = async (
   return response
 }
 
-export const checkNickname = async (nickname: string) => {
-  const response = await client.get(`/users/check-nickname/${nickname}`)
+export const checkForSignup = async (field: string, value: string) => {
+  const response = await client.get(`/users/check`, {
+    params: { field: field, value: value },
+  })
   return response
 }
-
-export const checkEmail = async (email: string) => {
-  const response = await client.get(`/users/check-email/${email}`)
-  return response
-}
-
 export const getUser = async (user_id: string) => {
   const response = await client.get(`/users/profile/${user_id}`)
   return response

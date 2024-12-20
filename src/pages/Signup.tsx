@@ -1,6 +1,6 @@
 import './Signup.css'
 
-import { checkEmail, checkNickname, signup } from '../api/auth.api'
+import { checkForSignup, signup } from '../api/auth.api'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -33,18 +33,45 @@ export default function Signup() {
       setIsNicknameValid(false)
     }
   }
-  const handleCheckNickname = async () => {
+  const isDuplicateName = async (field: string, value: string) => {
     try {
-      const res = await checkNickname(nickname)
-      if (res.status === 200 || res.status === 201) {
-        setIsNicknameChecked(true)
-        alert('사용 가능한 닉네임입니다.')
+      const response = await checkForSignup(field, value)
+      const isDuplicate = response.data.isDuplicate
+      if (response.status === 200 || response.status === 201) {
+        if (isDuplicate === 'false') {
+          setIsNicknameChecked(true)
+          alert('사용 가능한 닉네임입니다.')
+        } else {
+          setIsNicknameChecked(false)
+          alert('이미 사용중인 닉네임입니다.')
+        }
       } else {
-        setIsNicknameChecked(false)
-        alert('이미 사용중인 닉네임입니다.')
+        alert('닉네임 중복 체크 에러 발생')
       }
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const isDuplicateEmail = async (field: string, value: string) => {
+    try {
+      console.log(field, value)
+      const response = await checkForSignup(field, value)
+      const isDuplicate = response.data.isDuplicate
+      if (response.status === 200 || response.status === 201) {
+        if (isDuplicate === 'false') {
+          setIsEmailChecked(true)
+          alert('사용 가능한 이메일입니다.')
+        } else {
+          setIsEmailChecked(false)
+          alert('이미 사용중인 이메일입니다.')
+        }
+      } else {
+        alert('이메일 중복 체크 실패')
+      }
+    } catch (error) {
+      console.log(error)
+      alert('이메일 중복 체크 에러 발생')
     }
   }
 
@@ -59,22 +86,6 @@ export default function Signup() {
     }
   }
 
-  const handleCheckEmail = async () => {
-    try {
-      checkEmail(email).then((res) => {
-        if (res.status === 200) {
-          setIsEmailChecked(true)
-          alert('사용 가능한 이메일입니다.')
-        } else {
-          setIsEmailChecked(false)
-          alert('이미 사용중인 이메일입니다.')
-        }
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const validatePassword = (password: string) => {
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/
     setPassword(password)
@@ -84,17 +95,22 @@ export default function Signup() {
       setIsPasswordValid(false)
     }
   }
-  const handleSignup = () => {
+  const handleSignup = async () => {
     try {
-      if (isPasswordValid && isNicknameValid && isEmailValid) {
-        signup(nickname, email, password).then((res) => {
-          if (res.status === 200 || res.status === 201) {
-            alert('회원가입 완료')
-            navigate('/login')
-          } else {
-            alert('회원가입 실패')
-          }
-        })
+      if (
+        isPasswordValid &&
+        isNicknameValid &&
+        isEmailValid &&
+        isEmailChecked &&
+        isNicknameChecked
+      ) {
+        const response = await signup(nickname, email, password)
+        if (response.status === 201) {
+          alert('회원가입 완료')
+          navigate('/login')
+        } else {
+          alert('회원가입 실패')
+        }
       } else {
         alert('모든 항목 형식을 지켜 채워주세요.')
       }
@@ -133,7 +149,7 @@ export default function Signup() {
               className="sign-button"
               variant="contained"
               size="medium"
-              onClick={handleCheckNickname}
+              onClick={() => isDuplicateName('nickname', nickname)}
               disabled={!isNicknameValid}
             >
               중복 체크
@@ -160,7 +176,7 @@ export default function Signup() {
               className="sign-button"
               variant="contained"
               size="medium"
-              onClick={handleCheckEmail}
+              onClick={() => isDuplicateEmail('email', email)}
               disabled={!isEmailValid}
             >
               중복 체크
@@ -187,7 +203,10 @@ export default function Signup() {
               type="submit"
               fullWidth
               variant="contained"
-              onClick={handleSignup}
+              onClick={(e) => {
+                e.preventDefault()
+                handleSignup()
+              }}
               style={{
                 backgroundColor: 'black',
                 marginBottom: '10px',
