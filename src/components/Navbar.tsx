@@ -56,6 +56,7 @@ export default function NavBar() {
               to="/"
               onClick={() => {
                 storeLogout()
+                alert('로그아웃 되었습니다.')
                 setIsOpen(false)
               }}
             >

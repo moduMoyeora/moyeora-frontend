@@ -7,9 +7,7 @@ import {
   Container,
   Dialog,
   DialogActions,
-  DialogContent,
   DialogTitle,
-  FormControl,
   Grid,
   MenuItem,
   Paper,
@@ -21,13 +19,7 @@ import {
   Typography,
   selectClasses,
 } from '@mui/material'
-import {
-  FaEdit,
-  FaEnvelope,
-  FaLessThanEqual,
-  FaLock,
-  FaUser,
-} from 'react-icons/fa'
+import { FaEdit, FaUser } from 'react-icons/fa'
 import { FaMapLocationDot, FaRegMessage } from 'react-icons/fa6'
 import { getUser, updateUser } from '../api/auth.api'
 import { useEffect, useState } from 'react'
@@ -35,8 +27,10 @@ import { useEffect, useState } from 'react'
 import { BsGenderAmbiguous } from 'react-icons/bs'
 import { User } from '../model/users'
 import { useAuthStore } from '../store/authStore'
+import { useNavigate } from 'react-router-dom'
 
 export default function MyPage() {
+  const navigate = useNavigate()
   const { user_id, isLoggedIn } = useAuthStore()
   const [open, setOpen] = useState(false)
   const [alert, setAlert] = useState(false)
@@ -60,6 +54,8 @@ export default function MyPage() {
         const response = await getUser(user_id)
         if (response.status === 200) {
           setUser(response.data)
+        } else {
+          console.log('User information fetch failed:', response)
         }
       } catch (error) {
         console.error('Error fetching user information:', error)
@@ -68,22 +64,20 @@ export default function MyPage() {
   }
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && user_id) {
       getUserInformation()
     }
   }, [isLoggedIn, user_id])
+
+  useEffect(() => {
+    setEditUser(user)
+  }, [user])
 
   const handleClose = () => {
     setOpen(false)
     setAlert(false)
   }
-  const handleNumberChange = (value: number | null) => {
-    console.log(value)
-    setEditUser((prevUser) => ({
-      ...prevUser,
-      age: value || 0,
-    }))
-  }
+
   const handleDataChange = (
     e: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
@@ -93,9 +87,8 @@ export default function MyPage() {
       [name]: value,
     }))
   }
-  const handleChange = () => {}
+
   const handleSave = async () => {
-    // const user_id = State
     if (user_id) {
       try {
         const response = await updateUser(user_id.toString(), editUser)

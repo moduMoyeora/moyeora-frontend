@@ -38,7 +38,7 @@
     "web-vitals": "^2.1.4",
     "zustand": "^5.0.2"
   },
-  "proxy": "http://dev-moyeora.glitch.me",
+  "proxy": "https://dev-moyeora.glitch.me",
   "scripts": {
     "start": "react-scripts start",
     "winstart": "set \"GENERATE_SOURCEMAP=false\" && react-scripts start",

@@ -6,6 +6,7 @@ import Events from './pages/Events'
 import Login from './pages/Login'
 import MyPage from './pages/MyPage'
 import NavBar from './components/Navbar'
+import ProtectedRoute from './components/ProtectedRoute'
 import React from 'react'
 import Signup from './pages/Signup'
 import Home from './pages/Home'
@@ -22,7 +23,10 @@ const Router: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/mypage" element={<MyPage />} />
+        //login 필요한 페이지인 경우우
+        <Route element={<ProtectedRoute />}>
+          <Route path="/mypage" element={<MyPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )

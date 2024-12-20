@@ -35,7 +35,7 @@ function getCookie(name: string): string | null {
 
 const cookies = new Cookies()
 export default function Login() {
-  const { isLoggedIn, storeLogin, storeLogout } = useAuthStore()
+  const { isLoggedIn, storeLogin } = useAuthStore()
   const navigate = useNavigate()
   const [password, setPassword] = React.useState('')
   const [showPassword, setShowPassword] = React.useState(false)
@@ -79,11 +79,12 @@ export default function Login() {
         return
       }
       const res = await login(email, password)
-      const token = getCookie('authToken')
-      if (token) {
-        storeLogin(token)
-      }
+
       if (res.status === 200 || res.status === 201) {
+        const token = getCookie('authToken')
+        if (token) {
+          storeLogin(token)
+        }
         alert('로그인 완료')
         navigate('/')
       } else if (res.status === 401) {
