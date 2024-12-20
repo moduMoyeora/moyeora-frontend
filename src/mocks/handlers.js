@@ -5,7 +5,6 @@ export const handlers = [
     'https://dev-moyeora.glitch.me/users/login',
     async ({ request }) => {
       const { email, password } = await request.json()
-      console.log(email, password)
       return new HttpResponse(null, {
         status: 200,
         headers: {
@@ -18,7 +17,6 @@ export const handlers = [
   ),
   http.get('https://dev-moyeora.glitch.me/users/profile/:id', ({ params }) => {
     const { id } = params
-    console.log(id)
     return Response.json({
       id: params.id,
       nickname: 'testName',
@@ -27,9 +25,7 @@ export const handlers = [
   http.get('https://dev-moyeora.glitch.me/users/check', ({ request }) => {
     const url = new URL(request.url)
     const field = url.searchParams.get('field')
-    const value = url.searchParams.get('value')
-
-    console.log({ field, value }) // 디버깅용 출력
+    const value = url.searchParams.get('value') // 디버깅용 출력
 
     if (value === 'aa@gmail.com' && field === 'email') {
       return new HttpResponse(JSON.stringify({ isDuplicate: 'true' }), {
