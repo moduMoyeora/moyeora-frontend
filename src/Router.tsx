@@ -23,7 +23,7 @@ const Router: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        //login 필요한 페이지인 경우우
+        // login 필요한 페이지인 경우 아래에 넣으세요.
         <Route element={<ProtectedRoute />}>
           <Route path="/mypage" element={<MyPage />} />
         </Route>

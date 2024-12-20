@@ -6,7 +6,7 @@ import { useAuthStore } from '../store/authStore'
 import { useState } from 'react'
 
 const categories = [
-  { name: '게시판', path: '/writing' },
+  { name: '게시판', path: '/boards' },
   { name: '채팅', path: '/chat' },
 ]
 
