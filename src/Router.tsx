@@ -10,7 +10,6 @@ import ProtectedRoute from './components/ProtectedRoute'
 import React from 'react'
 import Signup from './pages/Signup'
 import Home from './pages/Home'
-import Comment from './components/Comment'
 
 const Router: React.FC = () => {
   return (
