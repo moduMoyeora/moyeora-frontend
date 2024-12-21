@@ -58,7 +58,7 @@ export default function Signup() {
       const response = await checkForSignup(field, value)
       const isDuplicate = response.data.isDuplicate
       if (response.status === 200 || response.status === 201) {
-        if (isDuplicate === 'false') {
+        if (isDuplicate === false) {
           setIsEmailChecked(true)
           alert('사용 가능한 이메일입니다.')
         } else {
