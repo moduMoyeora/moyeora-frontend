@@ -5,12 +5,12 @@ export const handlers = [
     'https://dev-moyeora.glitch.me/users/login',
     async ({ request }) => {
       const { email, password } = await request.json()
-      return new HttpResponse(null, {
+      return new HttpResponse(JSON.stringify({ id: 3 }), {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
           'Set-Cookie':
-            'Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywibmlja05hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM0NjA1NjQxLCJleHAiOjYxNzM0NjA1NjQxLCJpc3MiOiJtb3llb3JhLXNlcnZlciJ9.Ps_9R_a1QFIe8_L5VEF0OZCL_oXlohQOtRVycubAN5M',
+            'Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzM0Nzg1OTIzLCJleHAiOjE3MzQ3ODk1MjMsImlzcyI6Im1veWVvcmEtc2VydmVyIn0.zhXZ31eJbrquOfm2H8CsSIl_8RVjDvwVcoHAZUqklSA; Path=/; HttpOnly',
         },
       })
     }
