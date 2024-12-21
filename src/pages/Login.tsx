@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
-import { Cookies } from 'react-cookie'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import IconButton from '@mui/material/IconButton'
@@ -26,17 +25,9 @@ export interface LoginProps {
   email: string
   password: string
 }
-function getCookie(name: string): string | null {
-  return cookies.get(name)
-  // const value = `; ${document.cookie}`
-  // const parts = value.split(`; ${name}=`)
-  // if (parts.length === 2) return parts.pop()?.split(';').shift() ?? null
-  // return null
-}
 
-const cookies = new Cookies()
 export default function Login() {
-  const { isLoggedIn, storeLogin } = useAuthStore()
+  const { storeLogin } = useAuthStore()
   const navigate = useNavigate()
   const [password, setPassword] = React.useState('')
   const [showPassword, setShowPassword] = React.useState(false)
@@ -82,16 +73,9 @@ export default function Login() {
       const res = await login(email, password)
 
       if (res.status === 200 || res.status === 201) {
-        const token = getCookie('Authorization')
-        if (token) {
-          cookies.set('Authorization', token, { path: '/' })
-          console.log('success get Token')
-          storeLogin(token)
-          alert('로그인 완료')
-          navigate('/')
-        } else {
-          alert('로그인에 실패했습니다.')
-        }
+        storeLogin(res.data.id)
+        alert('로그인 완료')
+        navigate('/')
       } else if (res.status === 401) {
         setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.')
       } else if (res.status === 400) {
