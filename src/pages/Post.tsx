@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { createClient} from '../api/http'
+import { createClient } from '../api/http'
+import Comment from '../components/Comment'
 import parse from 'html-react-parser' //HTML 문자열을 React 에서 렌더링하기
 import {
   Box,
@@ -37,7 +38,7 @@ const AuthorTimeBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between', // 변경
-  marginTop: theme.spacing(1)
+  marginTop: theme.spacing(1),
 }))
 
 const Post: React.FC = () => {
@@ -47,7 +48,7 @@ const Post: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //드롭다운 메뉴의 위치와 표시 여부를 제어
   const open = Boolean(anchorEl)
   const navigate = useNavigate()
-  const client = createClient();
+  const client = createClient()
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -181,6 +182,7 @@ const Post: React.FC = () => {
           {parse(content)}
         </Typography>
       </Box>
+      <Comment boardId={boardId} />
     </ContentContainer>
   )
 }
