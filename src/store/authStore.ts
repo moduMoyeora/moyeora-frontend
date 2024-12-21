@@ -63,13 +63,14 @@ export const useAuthStore = create<StoreState>()(
             localStorage.removeItem('token')
             localStorage.removeItem('user_id')
           } else {
+            console.log('Token is valid.')
+            localStorage.setItem('token', token)
+            localStorage.setItem('user_id', decoded.id)
             set({
               isLoggedIn: true,
               user_id: decoded.id,
               token,
             })
-            localStorage.setItem('token', token)
-            localStorage.setItem('user_id', decoded.id)
           }
         }
       },
