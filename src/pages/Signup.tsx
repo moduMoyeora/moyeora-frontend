@@ -38,7 +38,7 @@ export default function Signup() {
       const response = await checkForSignup(field, value)
       const isDuplicate = response.data.isDuplicate
       if (response.status === 200 || response.status === 201) {
-        if (isDuplicate === 'false') {
+        if (isDuplicate === false) {
           setIsNicknameChecked(true)
           alert('사용 가능한 닉네임입니다.')
         } else {

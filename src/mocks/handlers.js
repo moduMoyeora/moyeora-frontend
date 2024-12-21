@@ -258,24 +258,64 @@ export const handlers = [
       }
     }
   ),
-  // http.get(
-  //   'https://dev-moyeora.glitch.me/boards/:boardId/posts/:postId',
-  //   ({ params }) => {
-  //     const boardId = params.boardId.toString()
-  //     const id = params.postId.toString()
-  //     return new HttpResponse(
-  //       JSON.stringify({
-  //         boardId: boardId,
-  //         board_name: '보드제목',
-  //         title: '제목 ',
-  //         author: '작가',
-  //         content: '콘텐트트',
-  //         created_at: '2024-01-02',
-  //         data: '보드 내용',
-  //         id: id,
-  //       }),
-  //       { status: 200 }
-  //     )
-  //   }
-  // ),
+  //댓글
+  http.get(
+    'https://dev-moyeora.glitch.me/boards/:boardId/posts/:postId/comments',
+    ({ params }) => {
+      const { postId, boardId } = params
+      console.log(postId, boardId)
+      if (!postId) {
+        return new HttpResponse(null, {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: 'Post ID is required' }),
+        })
+      }
+
+      if (boardId === '1' && postId === '1') {
+        const limit = Number(url.searchParams.get('limit')) || 5
+        const currentPage = Number(url.searchParams.get('currentPage')) || 1
+
+        const totalCount = 25
+        const comments = [
+          {
+            id: 1,
+            postId: postId,
+            content: 'test Comment',
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 2,
+            postId: postId,
+            content: 'test Comment',
+            createdAt: new Date().toISOString(),
+          },
+        ]
+
+        console.log(comments)
+        return new HttpResponse(null, {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: '댓글 목록 조회 성공',
+            data: {
+              comments,
+              pagination: {
+                totalCount,
+                currentPage,
+                totalPages: Math.ceil(totalCount / limit),
+                limit,
+              },
+            },
+          }),
+        })
+      } else {
+        return new HttpResponse(null, {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: 'Post ID is required' }),
+        })
+      }
+    }
+  ),
 ]

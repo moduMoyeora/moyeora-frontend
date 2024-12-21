@@ -191,7 +191,7 @@ const Post: React.FC = () => {
           {parse(content)}
         </Typography>
       </Box>
-      <Comment boardId={boardId} />
+      <Comment boardId={boardId || ''} postId={id || ''} />
     </ContentContainer>
   )
 }

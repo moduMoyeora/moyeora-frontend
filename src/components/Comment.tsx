@@ -4,7 +4,7 @@ import {
   postCommentById,
   putCommentById,
   deleteCommentById,
-  getCommentsByBoardId,
+  getCommentsByPostId,
 } from '../api/comment.api'
 import React, { useEffect, useState } from 'react'
 import {
@@ -33,47 +33,53 @@ const CommentSection = styled(Paper)(({ theme }) => ({
   width: '100%',
   backgroundColor: '#fafafa',
 }))
-
 interface CommentProps {
-  boardId: string | undefined
+  boardId: string
+  postId: string
 }
-export default function Comment({ boardId }: CommentProps) {
+interface Comment {
+  // author: string
+  content: string
+  createdAt: string
+  id: string | number
+}
+
+export default function Comment(props: CommentProps) {
+  const boardId = props.boardId
+  const postId = props.postId
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([
     {
-      id: 1,
-      user: '서희',
-      text: '테스ㅡ트트',
-      timestamp: '2 hours ago',
-    },
-    {
-      id: 2,
-      user: '혜원',
-      text: '꺄ㅐ릉',
-      timestamp: '1 hour ago',
+      id: '',
+      // author: '',
+      content: '',
+      createdAt: '',
     },
   ])
   useEffect(() => {
-    // const boardId = boardId;
+    if (postId) {
+      getComments(boardId, postId)
+    }
   }, [])
 
-  const getComments = async (boardId: string) => {
-    // const commentsResponse = await getCommentsByBoardId(boardId)
-    // if (commentsResponse.status === 200) {
-    //   setComments(commentsResponse.data)
-    // } else {
-    //   console.log('Error fetching comments:', commentsResponse)
-    //}
+  const getComments = async (boardId: string, postId: string) => {
+    const commentsResponse = await getCommentsByPostId(boardId, postId)
+    if (commentsResponse.status === 200) {
+      console.log('Comments fetched:', commentsResponse.data.comments)
+      setComments(commentsResponse.data.comments)
+    } else {
+      console.log('Error fetching comments:', commentsResponse)
+    }
   }
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
       const comment = {
         id: comments.length + 1, //commentId,
-        user: 'Guest User', //userName
-        text: newComment.trim(),
-        timestamp: 'Just now',
+        // author: 'Guest User', //userName
+        content: newComment.trim(),
+        createdAt: 'Just now',
       }
-      setComments([...comments, comment])
+      // setComments([...comments, comment])
       setNewComment('')
     }
   }
@@ -113,19 +119,17 @@ export default function Comment({ boardId }: CommentProps) {
                         component="span"
                         variant="subtitle1"
                         color="text.primary"
-                      >
-                        {comment.user}
-                      </Typography>
+                      ></Typography>
                       <Typography
                         component="span"
                         variant="body2"
                         color="text.secondary"
                       >
-                        {comment.timestamp}
+                        {comment.createdAt}
                       </Typography>
                     </Box>
                   }
-                  secondary={comment.text}
+                  secondary={comment.content}
                 />
               </ListItem>
               <Divider variant="inset" component="li" />
