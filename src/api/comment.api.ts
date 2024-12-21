@@ -20,3 +20,8 @@ export const deleteCommentById = async (commentId: string) => {
   const response = await client.delete(`${COMMENT_API}/${commentId}`)
   return response
 }
+// comment 전부 보여주는 api 필요
+export const getCommentsByBoardId = async (boardId: string) => {
+  // const response = await client.get(`/boards/:boardId/posts/${boardId}/comments`)
+  // return response
+}

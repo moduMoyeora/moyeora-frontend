@@ -40,11 +40,11 @@ export default function MyPage() {
   })
   const [user, setUser] = useState<User>({
     nickname: '',
-    realname: '',
+    name: '',
     description: '',
     gender: '',
     age: 0,
-    regions: '',
+    region: '',
   })
   const [editUser, setEditUser] = useState<User>(user)
 
@@ -150,7 +150,7 @@ export default function MyPage() {
                     실명
                   </Typography>
                   <Typography variant="body1" className="mypage-font-style">
-                    {user?.realname || ''}
+                    {user?.name || ''}
                   </Typography>
                 </Box>
                 <Box className="profile-field">
@@ -184,7 +184,7 @@ export default function MyPage() {
                     지역
                   </Typography>
                   <Typography variant="body1" className="mypage-font-style-2">
-                    {user?.regions || ''}
+                    {user?.region || ''}
                   </Typography>
                 </Box>
                 <Box className="profile-field">
@@ -230,8 +230,8 @@ export default function MyPage() {
               <TextField
                 variant="filled"
                 label="실명"
-                name="realname"
-                value={editUser?.realname || ''}
+                name="name"
+                value={editUser?.name || ''}
                 onChange={handleDataChange as TextFieldProps['onChange']}
               />
             </div>
@@ -270,8 +270,8 @@ export default function MyPage() {
               <TextField
                 variant="filled"
                 label="지역"
-                name="regions"
-                value={editUser?.regions || ''}
+                name="region"
+                value={editUser?.region || ''}
                 onChange={handleDataChange as TextFieldProps['onChange']}
               />
             </div>

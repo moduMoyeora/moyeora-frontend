@@ -1,4 +1,12 @@
-import React, { useState } from 'react'
+import './Comment.css'
+import {
+  getCommentById,
+  postCommentById,
+  putCommentById,
+  deleteCommentById,
+  getCommentsByBoardId,
+} from '../api/comment.api'
+import React, { useEffect, useState } from 'react'
 import {
   Container,
   Typography,
@@ -18,16 +26,18 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/system'
 import { FaRegComment, FaRegClock, FaUser } from 'react-icons/fa'
+import { get } from 'http'
 const CommentSection = styled(Paper)(({ theme }) => ({
   padding: '2rem',
   marginBottom: '2rem',
-  backgroundColor: '#f8f9fa',
+  width: '100%',
+  backgroundColor: '#fafafa',
 }))
-const StyledCard = styled(Card)(({ theme }) => ({
-  marginBottom: '2rem',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-}))
-export default function Comment() {
+
+interface CommentProps {
+  boardId: string | undefined
+}
+export default function Comment({ boardId }: CommentProps) {
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([
     {
@@ -43,12 +53,23 @@ export default function Comment() {
       timestamp: '1 hour ago',
     },
   ])
+  useEffect(() => {
+    // const boardId = boardId;
+  }, [])
 
+  const getComments = async (boardId: string) => {
+    // const commentsResponse = await getCommentsByBoardId(boardId)
+    // if (commentsResponse.status === 200) {
+    //   setComments(commentsResponse.data)
+    // } else {
+    //   console.log('Error fetching comments:', commentsResponse)
+    //}
+  }
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
       const comment = {
-        id: comments.length + 1,
-        user: 'Guest User',
+        id: comments.length + 1, //commentId,
+        user: 'Guest User', //userName
         text: newComment.trim(),
         timestamp: 'Just now',
       }
@@ -57,12 +78,20 @@ export default function Comment() {
     }
   }
   return (
-    <Container>
-      <CommentSection>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+    <Container
+      sx={{
+        mt: 3,
+        display: 'flex',
+        p: 0,
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <CommentSection sx={{ width: '100%', flexGrow: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <FaRegComment style={{ marginRight: '8px', fontSize: '1.5rem' }} />
           <Typography variant="h5" component="h2">
-            Comments
+            댓글
           </Typography>
         </Box>
 
@@ -104,13 +133,13 @@ export default function Comment() {
           ))}
         </List>
 
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{ mt: 3 }}>
           <TextField
             fullWidth
             multiline
             rows={3}
             variant="outlined"
-            placeholder="Write your comment here..."
+            placeholder="댓글을 남기세요"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             sx={{ mb: 2 }}
@@ -122,7 +151,7 @@ export default function Comment() {
             onClick={handleCommentSubmit}
             startIcon={<FaRegComment />}
           >
-            Submit Comment
+            댓글 남기기
           </Button>
         </Box>
       </CommentSection>

@@ -81,12 +81,14 @@ export default function Login() {
       const res = await login(email, password)
 
       if (res.status === 200 || res.status === 201) {
-        const token = getCookie('authToken')
+        const token = getCookie('Authorization')
         if (token) {
           storeLogin(token)
+          alert('로그인 완료')
+          navigate('/')
+        } else {
+          alert('로그인에 실패했습니다.')
         }
-        alert('로그인 완료')
-        navigate('/')
       } else if (res.status === 401) {
         setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.')
       } else if (res.status === 400) {
