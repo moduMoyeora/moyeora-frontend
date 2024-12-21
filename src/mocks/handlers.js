@@ -272,23 +272,37 @@ export const handlers = [
           }
         )
       }
-      const limit = 5
-      const currentPage = 1
-      const totalCount = 25
+
       const comments = [
         {
-          id: 1,
-          postId: postId,
-          author: 'test',
-          content: 'test Comment',
-          createdAt: new Date().toISOString(),
+          id: 13,
+          post_id: 1,
+          member_id: 4,
+          content: '댓글 내용3',
+          created_at: '2024-12-21T12:57:59.000Z',
+          updated_at: '2024-12-21T12:57:59.000Z',
+          nickname: '임영재',
+          email: 'young@test.com',
         },
         {
-          id: 2,
-          postId: postId,
-          author: 'test2',
-          content: 'test Comment',
-          createdAt: new Date().toISOString(),
+          id: 12,
+          post_id: 1,
+          member_id: 1,
+          content: '댓글 내용3',
+          created_at: '2024-12-21T11:45:21.000Z',
+          updated_at: '2024-12-21T11:45:21.000Z',
+          nickname: '차수빈',
+          email: 'subin@test.com',
+        },
+        {
+          id: 11,
+          post_id: 1,
+          member_id: 1,
+          content: '댓글 내용3',
+          created_at: '2024-12-21T10:29:00.000Z',
+          updated_at: '2024-12-21T10:29:00.000Z',
+          nickname: '차수빈',
+          email: 'subin@test.com',
         },
       ]
       return new HttpResponse(
@@ -296,12 +310,6 @@ export const handlers = [
           message: '댓글 목록 조회 성공',
           data: {
             comments,
-            pagination: {
-              totalCount,
-              currentPage,
-              totalPages: Math.ceil(totalCount / limit),
-              limit,
-            },
           },
         }),
         {

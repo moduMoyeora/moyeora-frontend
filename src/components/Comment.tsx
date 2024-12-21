@@ -29,6 +29,7 @@ import {
 import { styled } from '@mui/system'
 import { FaRegComment, FaRegClock, FaUser } from 'react-icons/fa'
 import { get } from 'http'
+import { updateUser } from '../api/auth.api'
 const CommentSection = styled(Paper)(({ theme }) => ({
   padding: '2rem',
   marginBottom: '2rem',
@@ -54,9 +55,11 @@ export default function Comment(props: CommentProps) {
   const [comments, setComments] = useState([
     {
       id: '',
-      author: '',
+      nickname: '',
       content: '',
       createdAt: '',
+      updateAt: '',
+      email: '',
     },
   ])
   useEffect(() => {
@@ -64,6 +67,22 @@ export default function Comment(props: CommentProps) {
       getComments(boardId, postId)
     }
   }, [])
+  const [page, setPage] = useState(1)
+  const commentsPerPage = 2
+  const totalPages = Math.ceil(comments.length / commentsPerPage)
+  const startIndex = (page - 1) * commentsPerPage
+  const endIndex = startIndex + commentsPerPage
+  const currentComments = comments.slice(startIndex, endIndex)
+  let totalCount = 0
+  let currentPage = 0
+  let totlaPages = 0
+  let limit = 0
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value)
+  }
 
   const getComments = async (boardId: string, postId: string) => {
     try {
@@ -82,9 +101,11 @@ export default function Comment(props: CommentProps) {
     if (newComment.trim()) {
       const comment = {
         id: comments.length + 1, //commentId,
-        author: 'Guest User', //userName
+        nickname: 'Guest User', //userName
         content: newComment.trim(),
-        createdAt: 'Just now',
+        createdAt: '2024-01-02',
+        updateAt: Date.now(),
+        email: '',
       }
       // setComments([...comments, comment])
       setNewComment('')
@@ -109,7 +130,7 @@ export default function Comment(props: CommentProps) {
         </Box>
 
         <List>
-          {comments.map((comment) => (
+          {currentComments.map((comment) => (
             <React.Fragment key={comment.id}>
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
@@ -127,7 +148,7 @@ export default function Comment(props: CommentProps) {
                         variant="subtitle1"
                         color="text.primary"
                       >
-                        {comment.author}
+                        {comment.nickname}
                       </Typography>
                       <Typography
                         component="span"
@@ -145,7 +166,15 @@ export default function Comment(props: CommentProps) {
             </React.Fragment>
           ))}
         </List>
-
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            size="large"
+          />
+        </Box>
         <Box sx={{ mt: 3 }}>
           <TextField
             fullWidth
