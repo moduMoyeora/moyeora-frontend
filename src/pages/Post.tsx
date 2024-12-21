@@ -50,6 +50,7 @@ const Post: React.FC = () => {
   const open = Boolean(anchorEl)
   const navigate = useNavigate()
   const client = createClient()
+  const currentUserId = useAuthStore((state) => state.user_id) //현재 로그인한 사용자 ID
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -116,7 +117,6 @@ const Post: React.FC = () => {
     })
   }
   const date = formatDate(formattedCreatedAt)
-  const currentUserId = useAuthStore((state) => state.user_id) //현재 로그인한 사용자 ID
   const isAuthor = currentUserId === member_id // 현재 로그인한 사용자와 글의 작성자가 같은지 확인
 
   return (
