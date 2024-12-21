@@ -27,10 +27,11 @@ export interface LoginProps {
   password: string
 }
 function getCookie(name: string): string | null {
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) return parts.pop()?.split(';').shift() ?? null
-  return null
+  return cookies.get(name)
+  // const value = `; ${document.cookie}`
+  // const parts = value.split(`; ${name}=`)
+  // if (parts.length === 2) return parts.pop()?.split(';').shift() ?? null
+  // return null
 }
 
 const cookies = new Cookies()
@@ -83,6 +84,8 @@ export default function Login() {
       if (res.status === 200 || res.status === 201) {
         const token = getCookie('Authorization')
         if (token) {
+          cookies.set('Authorization', token, { path: '/' })
+          console.log('success get Token')
           storeLogin(token)
           alert('로그인 완료')
           navigate('/')

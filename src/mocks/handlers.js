@@ -10,7 +10,7 @@ export const handlers = [
         headers: {
           'Content-Type': 'application/json',
           'Set-Cookie':
-            'Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzM0Nzg1OTIzLCJleHAiOjE3MzQ3ODk1MjMsImlzcyI6Im1veWVvcmEtc2VydmVyIn0.zhXZ31eJbrquOfm2H8CsSIl_8RVjDvwVcoHAZUqklSA; Domain=localhost; Path=/',
+            'Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzM0Nzg1OTIzLCJleHAiOjE3MzQ3ODk1MjMsImlzcyI6Im1veWVvcmEtc2VydmVyIn0.zhXZ31eJbrquOfm2H8CsSIl_8RVjDvwVcoHAZUqklSA; Path=/',
         },
       })
     }
