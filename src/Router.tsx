@@ -9,14 +9,15 @@ import NavBar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
 import React from 'react'
 import Signup from './pages/Signup'
-import Home from './pages/Home'
+import MainPage from './pages/MainPage'
+import PostList from './pages/PostList'
 
 const Router: React.FC = () => {
   return (
     <BrowserRouter>
       <NavBar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/boards/:boardId/posts/:id" element={<Post />} />
@@ -32,6 +33,7 @@ const Router: React.FC = () => {
             element={<EditPost />}
           />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/boards/:boardId" element={<PostList />} />
         </Route>
       </Routes>
     </BrowserRouter>

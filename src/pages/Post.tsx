@@ -13,6 +13,7 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/system'
 import { PiDotsThreeCircleVerticalThin } from 'react-icons/pi'
+import { useAuthStore } from '../store/authStore'
 
 interface PostData {
   data: {
@@ -21,6 +22,7 @@ interface PostData {
     author: string
     content: string
     created_at: string
+    member_id: string
   }
 }
 
@@ -49,6 +51,7 @@ const Post: React.FC = () => {
   const open = Boolean(anchorEl)
   const navigate = useNavigate()
   const client = createClient()
+  const currentUserId = useAuthStore((state) => state.user_id) //현재 로그인한 사용자 ID
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -100,7 +103,7 @@ const Post: React.FC = () => {
 
   // 서버에서 데이터 가져와서 게시물 보여줌
   const { data } = postData!
-  const { board_name, title, author, content, created_at } = data
+  const { board_name, title, author, content, created_at, member_id } = data
   const formattedCreatedAt = created_at || '작성 시간 정보가 없습니다.' // default 값 설정 해둠
   const formatDate = (dateString: string) => {
     //created_at 시간 형식 변경 함수
@@ -115,6 +118,7 @@ const Post: React.FC = () => {
     })
   }
   const date = formatDate(formattedCreatedAt)
+  const isAuthor = currentUserId === member_id // 현재 로그인한 사용자와 글의 작성자가 같은지 확인
 
   return (
     <ContentContainer>
@@ -143,35 +147,40 @@ const Post: React.FC = () => {
               {date}
             </Typography>
           </Box>
-          <Box>
-            {/* 메뉴를 열기 위한 아이콘 버튼 */}
-            <IconButton
-              aria-label="more"
-              aria-controls="long-menu"
-              aria-haspopup="true"
-              onClick={handleClick}
-            >
-              <PiDotsThreeCircleVerticalThin size={24} color="text.secondary" />
-            </IconButton>
-            {/* 드롭다운 메뉴 컴포넌트 */}
-            <Menu
-              id="long-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              <MenuItem onClick={handleEdit}>수정하기</MenuItem>
-              <MenuItem onClick={handleDelete}>삭제하기</MenuItem>
-            </Menu>
-          </Box>
+          {isAuthor && (
+            <Box>
+              {/* 메뉴를 열기 위한 아이콘 버튼 */}
+              <IconButton
+                aria-label="more"
+                aria-controls="long-menu"
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
+                <PiDotsThreeCircleVerticalThin
+                  size={24}
+                  color="text.secondary"
+                />
+              </IconButton>
+              {/* 드롭다운 메뉴 컴포넌트 */}
+              <Menu
+                id="long-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <MenuItem onClick={handleEdit}>수정하기</MenuItem>
+                <MenuItem onClick={handleDelete}>삭제하기</MenuItem>
+              </Menu>
+            </Box>
+          )}
         </AuthorTimeBox>
       </HeaderBox>
 
