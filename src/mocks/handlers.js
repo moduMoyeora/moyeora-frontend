@@ -10,7 +10,7 @@ export const handlers = [
         headers: {
           'Content-Type': 'application/json',
           'Set-Cookie':
-            'Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywibmlja05hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM0NjA1NjQxLCJleHAiOjYxNzM0NjA1NjQxLCJpc3MiOiJtb3llb3JhLXNlcnZlciJ9.Ps_9R_a1QFIe8_L5VEF0OZCL_oXlohQOtRVycubAN5M',
+            'Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzM0Nzg0NDk1LCJleHAiOjE3MzQ3ODgwOTUsImlzcyI6Im1veWVvcmEtc2VydmVyIn0.TRCpON9nnva4I3BmGuIXvQwvWObZlEqTOrXhopiVlnE; Domain=localhost;',
         },
       })
     }
@@ -102,7 +102,7 @@ export const handlers = [
     ({ params }) => {
       const { boardId } = params
 
-      if (boardId === '1') {
+      if (boardId == '1') {
         // 게시판을 찾을 수 있는 경우
         return Response.json({
           message: '게시물 목록 조회 성공',
@@ -150,7 +150,7 @@ export const handlers = [
         )
       }
 
-      if (boardId === '1' && postId === '1') {
+      if (boardId == '1' && postId == '1') {
         // 게시물 등록 완료
         return Response.json(
           {
@@ -263,59 +263,52 @@ export const handlers = [
     'https://dev-moyeora.glitch.me/boards/:boardId/posts/:postId/comments',
     ({ params }) => {
       const { postId, boardId } = params
-      console.log(postId, boardId)
       if (!postId) {
-        return new HttpResponse(null, {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: 'Post ID is required' }),
-        })
+        return new HttpResponse(
+          JSON.stringify({ message: 'Post ID is required' }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        )
       }
-
-      if (boardId === '1' && postId === '1') {
-        const limit = Number(url.searchParams.get('limit')) || 5
-        const currentPage = Number(url.searchParams.get('currentPage')) || 1
-
-        const totalCount = 25
-        const comments = [
-          {
-            id: 1,
-            postId: postId,
-            content: 'test Comment',
-            createdAt: new Date().toISOString(),
+      const limit = 5
+      const currentPage = 1
+      const totalCount = 25
+      const comments = [
+        {
+          id: 1,
+          postId: postId,
+          author: 'test',
+          content: 'test Comment',
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: 2,
+          postId: postId,
+          author: 'test2',
+          content: 'test Comment',
+          createdAt: new Date().toISOString(),
+        },
+      ]
+      return new HttpResponse(
+        JSON.stringify({
+          message: '댓글 목록 조회 성공',
+          data: {
+            comments,
+            pagination: {
+              totalCount,
+              currentPage,
+              totalPages: Math.ceil(totalCount / limit),
+              limit,
+            },
           },
-          {
-            id: 2,
-            postId: postId,
-            content: 'test Comment',
-            createdAt: new Date().toISOString(),
-          },
-        ]
-
-        console.log(comments)
-        return new HttpResponse(null, {
+        }),
+        {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: '댓글 목록 조회 성공',
-            data: {
-              comments,
-              pagination: {
-                totalCount,
-                currentPage,
-                totalPages: Math.ceil(totalCount / limit),
-                limit,
-              },
-            },
-          }),
-        })
-      } else {
-        return new HttpResponse(null, {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: 'Post ID is required' }),
-        })
-      }
+        }
+      )
     }
   ),
 ]

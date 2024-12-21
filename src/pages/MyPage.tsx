@@ -258,13 +258,6 @@ export default function MyPage() {
                 <MenuItem value={'남자'}>남자</MenuItem>
                 <MenuItem value={'여자'}>여자</MenuItem>
               </Select>
-              {/* <TextField
-                variant="filled"
-                label="성별"
-                name="gender"
-                value={editUser?.gender || ''}
-                onChange={handleDataChange}
-              /> */}
             </div>
             <div className="form-content">
               <TextField

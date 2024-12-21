@@ -1,4 +1,6 @@
 import './Comment.css'
+import { useAuthStore } from '../store/authStore'
+
 import {
   getCommentById,
   postCommentById,
@@ -38,7 +40,7 @@ interface CommentProps {
   postId: string
 }
 interface Comment {
-  // author: string
+  author: string
   content: string
   createdAt: string
   id: string | number
@@ -47,11 +49,12 @@ interface Comment {
 export default function Comment(props: CommentProps) {
   const boardId = props.boardId
   const postId = props.postId
+  const { user_id } = useAuthStore()
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([
     {
       id: '',
-      // author: '',
+      author: '',
       content: '',
       createdAt: '',
     },
@@ -63,19 +66,23 @@ export default function Comment(props: CommentProps) {
   }, [])
 
   const getComments = async (boardId: string, postId: string) => {
-    const commentsResponse = await getCommentsByPostId(boardId, postId)
-    if (commentsResponse.status === 200) {
-      console.log('Comments fetched:', commentsResponse.data.comments)
-      setComments(commentsResponse.data.comments)
-    } else {
-      console.log('Error fetching comments:', commentsResponse)
+    try {
+      const commentsResponse = await getCommentsByPostId(boardId, postId)
+      if (commentsResponse.status === 200) {
+        console.log('Comments fetched:')
+        setComments(commentsResponse.data.data.comments)
+      } else {
+        console.log('Error fetching comments:', commentsResponse.status)
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error)
     }
   }
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
       const comment = {
         id: comments.length + 1, //commentId,
-        // author: 'Guest User', //userName
+        author: 'Guest User', //userName
         content: newComment.trim(),
         createdAt: 'Just now',
       }
@@ -119,7 +126,9 @@ export default function Comment(props: CommentProps) {
                         component="span"
                         variant="subtitle1"
                         color="text.primary"
-                      ></Typography>
+                      >
+                        {comment.author}
+                      </Typography>
                       <Typography
                         component="span"
                         variant="body2"

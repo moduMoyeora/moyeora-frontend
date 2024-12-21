@@ -75,7 +75,8 @@ export default function Signup() {
   }
 
   const validateEmail = async (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex =
+      /([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])([a-zA-Z\.]+)/g
     setEmail(email)
     if (emailRegex.test(email)) {
       setIsEmailValid(true)

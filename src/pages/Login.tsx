@@ -45,7 +45,8 @@ export default function Login() {
   const [isPasswordValid, setIsPasswordValid] = React.useState(false)
 
   const validateEmail = async (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex =
+      /([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])([a-zA-Z\.]+)/g
     setEmail(email)
     if (emailRegex.test(email)) {
       setIsEmailValid(true)
@@ -82,6 +83,7 @@ export default function Login() {
 
       if (res.status === 200 || res.status === 201) {
         const token = getCookie('Authorization')
+        console.log('token:', token)
         if (token) {
           storeLogin(token)
           alert('로그인 완료')
