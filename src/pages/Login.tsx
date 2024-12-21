@@ -81,7 +81,7 @@ export default function Login() {
       const res = await login(email, password)
 
       if (res.status === 200 || res.status === 201) {
-        const token = getCookie('authToken')
+        const token = getCookie('Authorization')
         if (token) {
           storeLogin(token)
         }

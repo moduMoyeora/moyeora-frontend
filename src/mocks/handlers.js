@@ -10,22 +10,12 @@ export const handlers = [
         headers: {
           'Content-Type': 'application/json',
           'Set-Cookie':
-            'authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywibmlja05hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM0NjA1NjQxLCJleHAiOjYxNzM0NjA1NjQxLCJpc3MiOiJtb3llb3JhLXNlcnZlciJ9.Ps_9R_a1QFIe8_L5VEF0OZCL_oXlohQOtRVycubAN5M',
+            'Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywibmlja05hbWUiOiJ0ZXN0IiwiaWF0IjoxNzM0NjA1NjQxLCJleHAiOjYxNzM0NjA1NjQxLCJpc3MiOiJtb3llb3JhLXNlcnZlciJ9.Ps_9R_a1QFIe8_L5VEF0OZCL_oXlohQOtRVycubAN5M',
         },
       })
     }
   ),
-  http.options('/users/login', async () => {
-    return HttpResponse.text('', {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': 'http://your-frontend-domain.com',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        // Intentionally missing Access-Control-Allow-Headers
-      },
-    })
-  }),
-  ,
+
   http.get('https://dev-moyeora.glitch.me/users/profile/:id', ({ params }) => {
     const { id } = params
     return Response.json({
