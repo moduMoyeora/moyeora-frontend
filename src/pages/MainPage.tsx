@@ -51,7 +51,7 @@ const MainPage: React.FC = () => {
     const fetchBoards = async () => {
       setIsLoading(true)
       try {
-        const response = await axios.get('https://dev-moyeora.glitch.me') // 실제 API URL로 변경
+        const response = await axios.get('https://dev-moyeora.glitch.me/boards')
         console.log(response.data) // API 응답 데이터 확인
 
         setBoardItems(response.data) // 게시판 목록 상태 업데이트
@@ -72,25 +72,27 @@ const MainPage: React.FC = () => {
   // }, [])
 
   useEffect(() => {
-    const fetchPosts = async (boardId: number) => {
-      try {
-        const response = await axios.get(
-          `http://dev-moyeora.glitch.me/boards/${boardId}/posts`
-        )
-        console.log('Board data:', response.data) // 추가 디버깅 정보
-        setPostsForBoards((prev) => ({
-          ...prev,
-          [boardId]: response.data.slice(0, 3), // 게시물 3개만 가져오기
-        }))
-      } catch (err) {
-        setError(`게시판 ${boardId}의 게시물 목록을 가져오는 데 실패했습니다.`)
+    const fetchPosts = async () => {
+      const postsByBoard: Record<number, Post[]> = {} // 각 게시판에 대한 게시물 목록을 저장할 객체
+
+      // 각 게시판에 대해 게시물 목록을 가져옵니다.
+      for (let board of boardItems) {
+        try {
+          const response = await axios.get(
+            `https://dev-moyeora.glitch.me/boards/${board.id}/posts` // 게시판별 게시물 목록 조회 API
+          )
+          postsByBoard[board.id] = response.data.slice(0, 3) // 최대 3개 게시물만 가져오기
+        } catch (err) {
+          console.error(`게시판 ${board.id}의 게시물 조회 실패:`, err)
+        }
       }
+      setPostsForBoards(postsByBoard) // 상태 업데이트
     }
 
-    boardItems.forEach((board) => {
-      fetchPosts(board.id) // 각 게시판에 대해 게시물 가져오기
-    })
-  }, [boardItems]) // 게시판 목록이 업데이트되면 게시물 목록을 다시 가져옴
+    if (boardItems.length > 0) {
+      fetchPosts() // 게시판 목록이 있을 때 게시물 목록을 조회
+    }
+  }, [boardItems])
 
   if (isLoading) {
     return (
