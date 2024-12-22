@@ -188,62 +188,66 @@ export default function Comment() {
         </Box>
 
         <List>
-          {currentComments.map((comment) => (
-            <React.Fragment key={comment.id}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar>
-                    <FaUser />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <Typography
-                        component="span"
-                        variant="subtitle1"
-                        color="text.primary"
+          {currentComments.length > 0 ? (
+            currentComments.map((comment) => (
+              <React.Fragment key={comment.id}>
+                <ListItem alignItems="flex-start">
+                  <ListItemAvatar>
+                    <Avatar>
+                      <FaUser />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
                       >
-                        {comment.nickname}
-                      </Typography>
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        color="text.secondary"
+                        <Typography
+                          component="span"
+                          variant="subtitle1"
+                          color="text.primary"
+                        >
+                          {comment.nickname}
+                        </Typography>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          color="text.secondary"
+                        >
+                          {comment.createdAt}
+                        </Typography>
+                      </Box>
+                    }
+                    secondary={comment.content}
+                  />
+                  {user_id === comment.member_id ? (
+                    <div>
+                      <Button
+                        onClick={() =>
+                          handleEditDialog(comment.id, comment.content)
+                        }
                       >
-                        {comment.createdAt}
-                      </Typography>
-                    </Box>
-                  }
-                  secondary={comment.content}
-                />
-                {user_id === comment.member_id ? (
-                  <div>
-                    <Button
-                      onClick={() =>
-                        handleEditDialog(comment.id, comment.content)
-                      }
-                    >
-                      <FaPen
-                        style={{ color: 'black', fontSize: '15px' }}
-                      ></FaPen>
-                    </Button>{' '}
-                    <Button onClick={() => handleDeleteComment(comment.id)}>
-                      <FaTrash
-                        style={{ color: 'black', fontSize: '15px' }}
-                      ></FaTrash>
-                    </Button>
-                  </div>
-                ) : null}
-              </ListItem>
-              <Divider variant="inset" component="li" />
-            </React.Fragment>
-          ))}
+                        <FaPen
+                          style={{ color: 'black', fontSize: '15px' }}
+                        ></FaPen>
+                      </Button>{' '}
+                      <Button onClick={() => handleDeleteComment(comment.id)}>
+                        <FaTrash
+                          style={{ color: 'black', fontSize: '15px' }}
+                        ></FaTrash>
+                      </Button>
+                    </div>
+                  ) : null}
+                </ListItem>
+                <Divider variant="inset" component="li" />
+              </React.Fragment>
+            ))
+          ) : (
+            <Typography>댓글이 없습니다.</Typography>
+          )}
         </List>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
           <Pagination
