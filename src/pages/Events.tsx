@@ -20,6 +20,12 @@ import { createClient } from '../api/http'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { AxiosError } from 'axios';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.tz.setDefault("Asia/Seoul")
 
 interface FormInputs { // 폼 입력 값 타입 정의
   location: string
@@ -89,8 +95,7 @@ function Events() {
         setInitialData(eventData);
         setIsEdit(true);
         
-        const eventDateTime = dayjs(eventData.event_time);
-        console.log(eventDateTime);
+        const eventDateTime = dayjs.tz(eventData.event_time, "Asia/Seoul")
         reset({
           location: eventData.location,
           date: eventDateTime,
@@ -116,7 +121,7 @@ function Events() {
       const combinedDateTime = data.date
         ?.hour(data.time?.hour() || 0)
         ?.minute(data.time?.minute() || 0)
-        ?.second(0)
+        ?.tz("UTC")
         ?.format('YYYY-MM-DD HH:mm:ss')
 
       // 백엔드로 보낼 데이터 형식
