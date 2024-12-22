@@ -69,6 +69,7 @@ const PostList: React.FC = () => {
         params: { limit: 3, page: currentPage },
       })
       if (response.status === 204 || !response.data.data.posts) {
+
         setPosts([]) // 데이터가 없을 경우 빈 배열 설정
         setTotalPages(0)
       } else {
