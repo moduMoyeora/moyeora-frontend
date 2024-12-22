@@ -74,7 +74,10 @@ const Post: React.FC = () => {
   const handleDelete = async () => {
     try {
       await client.delete(`/boards/${boardId}/posts/${id}`)
-      alert('게시글이 삭제되었습니다.')
+      if(eventIdFromLocation){ //이전 페이지에서 받은 eventId가 있으면
+        DeleteEvent(); // 모임 일정 삭제
+        alert('게시글과 모임 일정이 삭제되었습니다.')
+      }
       navigate('/')
     } catch (error) {
       console.error('Error:', error)
@@ -90,7 +93,7 @@ const Post: React.FC = () => {
 
   const DeleteEvent = async () => { // 모임 일정 삭제
     try {
-      await client.delete(`/boards/${boardId}/posts/${id}/events/${eventId}`)
+      await client.delete(`/boards/${boardId}/posts/${id}/events/${eventIdFromLocation}`)
       alert('모임 일정이 삭제되었습니다.')
     } catch (error) {
       console.error('Error:', error)
@@ -202,7 +205,6 @@ const Post: React.FC = () => {
                 <MenuItem onClick={handleEdit}>수정하기</MenuItem>
                 <MenuItem onClick={handleDelete}>삭제하기</MenuItem>
                 <MenuItem onClick={EditEvent}>일정 수정하기</MenuItem>
-                <MenuItem onClick={DeleteEvent}>일정 삭제하기</MenuItem>
               </Menu>
             </Box>
           )}

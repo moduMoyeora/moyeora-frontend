@@ -70,8 +70,8 @@ function Events() {
           // 폼 초기화
           reset({
             location: response.data.location,
-            date: dayjs(response.data.time),
-            time: dayjs(response.data.time),
+            date: dayjs(response.data.event_time),
+            time: dayjs(response.data.event_time),
           })
         } catch (error) {
           console.error('Error:', error)
