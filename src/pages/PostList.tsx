@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { httpClient } from '../api/http' // 경로를 맞춰서 가져옵니다.
+import { httpClient } from '../api/http'
 import {
   Box,
   Typography,
@@ -20,8 +20,8 @@ interface Board {
 interface Post {
   id: number
   title: string
-  author: string
-  createdAt: string
+  nickname: string
+  created_at: string
 }
 
 const PostList: React.FC = () => {
@@ -70,17 +70,20 @@ const PostList: React.FC = () => {
       const response = await httpClient.get(`/boards/${boardId}/posts`, {
         params: { limit: 3, page: currentPage },
       })
-      if (response.status === 204 || !response.data.data.posts) {
+      const postsData = response.data.data.posts || []
+      const pagination = response.data.data.pagination || {}
 
-        setPosts([]) // 데이터가 없을 경우 빈 배열 설정
-        setTotalPages(0)
+      setPosts(postsData)
+      setTotalPages(pagination.totalPages || 0)
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        // Refresh 토큰 요청 또는 로그아웃 처리
+        console.log('토큰 만료: 재인증이 필요합니다.')
+        // Refresh Token 로직 추가
       } else {
-        setPosts(response.data.posts || [])
-        setTotalPages(Math.ceil((response.data.total || 0) / 10))
+        console.error(err)
+        setError('게시글을 불러오는데 실패했습니다.')
       }
-    } catch (err) {
-      console.error(err)
-      setError('게시글을 불러오는데 실패했습니다.')
     } finally {
       setIsLoading(false)
     }
@@ -109,27 +112,33 @@ const PostList: React.FC = () => {
 
   return (
     <Box maxWidth="1200px" mx="auto" mt={4}>
-      <Typography variant="h4" gutterBottom textAlign="center">
-        {boardTitle || '게시판'} {/* 제목 렌더링 */}
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => navigate(`/boards/${boardId}/posts`)}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
       >
-        글작성
-      </Button>
+        <Typography variant="h4">{boardTitle || '게시판'}</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate(`/boards/${boardId}/posts`)}
+          sx={{ height: '40px' }} // 버튼 높이 조절
+        >
+          글작성
+        </Button>
+      </Box>
       <Paper
         sx={{
           padding: 2,
-          minHeight: '50vh', // 게시글 목록 크기 설정 (최소 높이)
+          minHeight: '50vh',
           minWidth: '50vw',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
         }}
       >
-        {' '}
+        {/* 게시글 리스트 */}
         <Box p={2}>
           <Grid container spacing={3} sx={{ fontWeight: 'bold' }}>
             <Grid
@@ -172,7 +181,6 @@ const PostList: React.FC = () => {
               작성일
             </Grid>
           </Grid>
-          {/* 게시글 렌더링 */}
           <Box mt={2}>
             {posts.length === 0 ? (
               <Typography align="center" color="textSecondary" sx={{ mt: 2 }}>
@@ -198,10 +206,10 @@ const PostList: React.FC = () => {
                       <Typography noWrap>{post.title}</Typography>
                     </Grid>
                     <Grid item xs={3} textAlign="center">
-                      {post.author}
+                      {post.nickname}
                     </Grid>
                     <Grid item xs={3} textAlign="center">
-                      {new Date(post.createdAt).toLocaleDateString()}
+                      {new Date(post.created_at).toLocaleDateString()}
                     </Grid>
                   </Grid>
                 </Link>
@@ -210,7 +218,6 @@ const PostList: React.FC = () => {
           </Box>
         </Box>
       </Paper>
-      {/* 페이지 네이션 */}
       {totalPages > 1 && (
         <Box mt={4} display="flex" justifyContent="center">
           <Pagination
