@@ -73,6 +73,10 @@ export default function MyPage() {
         const response = await getUser(user_id)
         if (response.status === 200) {
           setUser(response.data)
+        } else if (response.status === 401) {
+          console.log('Unauthorized access detected. Logging out.')
+          useAuthStore.getState().storeLogout()
+          navigate('/login')
         } else {
           console.log('User information fetch failed:', response)
         }
