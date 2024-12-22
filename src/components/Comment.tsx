@@ -33,6 +33,7 @@ import {
 import { styled } from '@mui/system'
 import { FaRegComment, FaUser, FaPen, FaTrash } from 'react-icons/fa'
 import { set } from 'react-hook-form'
+import { createClient } from '../api/http'
 
 const CommentSection = styled(Paper)(({ theme }) => ({
   padding: '2rem',
@@ -56,8 +57,11 @@ interface CommentData {
   commentId: string | number
   content: string
 }
+interface props {
+  postWriter: string
+}
 
-export default function Comment() {
+export default function Comment({ postWriter }: props) {
   const params = useParams<{ id: string; boardId: string }>()
   const postId = params.id
   const boardId = params.boardId
@@ -170,6 +174,21 @@ export default function Comment() {
       console.log('Error editing comment:', response)
     }
   }
+
+  const client = createClient()
+  const sendEmail = async (comment_id: number) => {
+    try {
+      const response = await client.post(
+        `/email/boards/${boardId}/posts/${postId}`,
+        { commentId: comment_id }
+      )
+      if (response.status === 200) {
+        alert('이메일 전송 완료')
+      }
+    } catch (error) {
+      console.error('Error sending email:', error)
+    }
+  }
   return (
     <Container
       sx={{
@@ -242,6 +261,17 @@ export default function Comment() {
                       </Button>
                     </div>
                   ) : null}
+                  {user_id === postWriter && (
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      size="small"
+                      onClick={() => sendEmail(Number(comment.id))}
+                      sx={{ mt: 2, backgroundColor: 'black' }}
+                    >
+                      수락
+                    </Button>
+                  )}
                 </ListItem>
                 <Divider variant="inset" component="li" />
               </React.Fragment>

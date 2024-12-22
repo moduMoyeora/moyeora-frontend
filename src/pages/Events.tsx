@@ -121,7 +121,7 @@ function Events() {
       const combinedDateTime = data.date
         ?.hour(data.time?.hour() || 0)
         ?.minute(data.time?.minute() || 0)
-        ?.tz("UTC")
+        ?.second(0)
         ?.format('YYYY-MM-DD HH:mm:ss')
 
       // 백엔드로 보낼 데이터 형식
