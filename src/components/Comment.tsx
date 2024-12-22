@@ -179,7 +179,7 @@ export default function Comment({ postWriter }: props) {
   const sendEmail = async (comment_id: number) => {
     try {
       const response = await client.post(
-        `/email/boards/${boardId}/posts/${postId}`,
+        `/boards/${boardId}/posts/${postId}/email`,
         { commentId: comment_id }
       )
       if (response.status === 200) {
@@ -267,7 +267,12 @@ export default function Comment({ postWriter }: props) {
                       variant="contained"
                       size="small"
                       onClick={() => sendEmail(Number(comment.id))}
-                      sx={{ mt: 2, backgroundColor: 'black' }}
+                      sx={{
+                        backgroundColor: 'black',
+                        '&:hover': {
+                          backgroundColor: '#8C8C8C',
+                        },
+                      }}
                     >
                       수락
                     </Button>
