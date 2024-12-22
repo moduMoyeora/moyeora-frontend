@@ -48,10 +48,9 @@ const AuthorTimeBox = styled(Box)(({ theme }) => ({
 }))
 
 const Post: React.FC = () => {
-  const { id, boardId, eventId } = useParams<{
+  const { id, boardId } = useParams<{
     id: string
     boardId: string
-    eventId: string
   }>()
   const [postData, setPostData] = useState<PostData | null>(null)
   const [error, setError] = useState<string>('')
@@ -221,7 +220,7 @@ const Post: React.FC = () => {
         </Typography>
       </Box>
       <Box>
-        <Comment />
+        <Comment postWriter={member_id}/>
       </Box>
     </ContentContainer>
   )
