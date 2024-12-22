@@ -35,7 +35,7 @@ export const getUser = async (user_id: string) => {
 export const updateUser = async (user_id: string, user: User) => {
   let UpdatedUser: any = new Object()
   for (const [key, value] of Object.entries(user)) {
-    if (value !== '' && value !== undefined) {
+    if (value !== '' && value !== undefined && value !== null) {
       UpdatedUser[key] = value
     }
   }
