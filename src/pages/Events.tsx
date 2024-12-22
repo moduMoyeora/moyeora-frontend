@@ -19,6 +19,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { createClient } from '../api/http'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { AxiosError } from 'axios';
 
 interface FormInputs { // 폼 입력 값 타입 정의
   location: string
@@ -68,7 +69,14 @@ function Events() {
       )
       return response.data;
     } catch (error) {
-      return null;
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 404) {
+          return null;
+        }
+        throw error;
+      }
+      // 예상치 못한 에러 처리
+      throw new Error('알 수 없는 에러가 발생했습니다.');
     }
   };
   
