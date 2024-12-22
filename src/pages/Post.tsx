@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createClient } from '../api/http'
+import Comment from '../components/Comment'
 import parse from 'html-react-parser' //HTML 문자열을 React 에서 렌더링하기
 import {
   Box,
@@ -29,6 +30,10 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   maxWidth: '800px', // 또는 원하는 최대 너비
   margin: '0 auto', // 가운데 정렬
   padding: theme.spacing(3),
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '100vh',
+  marginTop: '10%',
 }))
 
 const HeaderBox = styled(Box)(({ theme }) => ({
@@ -189,6 +194,9 @@ const Post: React.FC = () => {
         <Typography component="div" className="result">
           {parse(content)}
         </Typography>
+      </Box>
+      <Box>
+        <Comment />
       </Box>
     </ContentContainer>
   )

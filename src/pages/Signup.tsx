@@ -38,7 +38,7 @@ export default function Signup() {
       const response = await checkForSignup(field, value)
       const isDuplicate = response.data.isDuplicate
       if (response.status === 200 || response.status === 201) {
-        if (isDuplicate === 'false') {
+        if (isDuplicate === false) {
           setIsNicknameChecked(true)
           alert('사용 가능한 닉네임입니다.')
         } else {
@@ -58,7 +58,7 @@ export default function Signup() {
       const response = await checkForSignup(field, value)
       const isDuplicate = response.data.isDuplicate
       if (response.status === 200 || response.status === 201) {
-        if (isDuplicate === 'false') {
+        if (isDuplicate === false) {
           setIsEmailChecked(true)
           alert('사용 가능한 이메일입니다.')
         } else {
@@ -75,7 +75,8 @@ export default function Signup() {
   }
 
   const validateEmail = async (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex =
+      /([a-zA-Z0-9]+)([\_\.\-{1}])?([a-zA-Z0-9]+)\@([a-zA-Z0-9]+)([\.])([a-zA-Z\.]+)/g
     setEmail(email)
     if (emailRegex.test(email)) {
       setIsEmailValid(true)
