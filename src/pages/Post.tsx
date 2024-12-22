@@ -48,7 +48,7 @@ const AuthorTimeBox = styled(Box)(({ theme }) => ({
 }))
 
 const Post: React.FC = () => {
-  const { id, boardId } = useParams<{ id: string; boardId: string }>()
+  const { id, boardId, eventId} = useParams<{ id: string; boardId: string; eventId: string; }>()
   const [postData, setPostData] = useState<PostData | null>(null)
   const [error, setError] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //드롭다운 메뉴의 위치와 표시 여부를 제어
@@ -76,6 +76,22 @@ const Post: React.FC = () => {
     } catch (error) {
       console.error('Error:', error)
       alert('게시글 삭제에 실패했습니다.')
+    }
+    handleClose() // 메뉴 닫기
+  }
+
+  const EditEvent = () => { // 모임 일정 수정
+    handleClose();
+    navigate(`/boards/${boardId}/posts/${id}/events/${eventId}/edit`);
+  }
+
+  const DeleteEvent = async () => { // 모임 일정 삭제
+    try {
+      await client.delete(`/boards/${boardId}/posts/${id}/events/${eventId}`)
+      alert('모임 일정이 삭제되었습니다.')
+    } catch (error) {
+      console.error('Error:', error)
+      alert('모임 일정 삭제에 실패했습니다.')
     }
     handleClose() // 메뉴 닫기
   }
@@ -182,6 +198,8 @@ const Post: React.FC = () => {
               >
                 <MenuItem onClick={handleEdit}>수정하기</MenuItem>
                 <MenuItem onClick={handleDelete}>삭제하기</MenuItem>
+                <MenuItem onClick={EditEvent}>일정 수정하기</MenuItem>
+                <MenuItem onClick={DeleteEvent}>일정 삭제하기</MenuItem>
               </Menu>
             </Box>
           )}

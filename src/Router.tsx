@@ -20,21 +20,27 @@ const Router: React.FC = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/boards/:boardId/posts/:id" element={<Post />} />
         // login 필요한 페이지인 경우 아래에 넣으세요.
         <Route element={<ProtectedRoute />}>
-          <Route path="/boards/:boardId/posts" element={<CreatePost />} />
-          <Route
-            path="/boards/:boardId/posts/:id/events"
-            element={<Events />}
-          />
-          <Route
-            path="/boards/:boardId/posts/:id/edit"
-            element={<EditPost />}
-          />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/boards/:boardId" element={<PostList />} />
+          <Route path="/boards/:boardId/posts/:id" element={<Post />} />
+          <Route path="/boards/:boardId/posts" element={<CreatePost />} />
+          <Route
+            path="/boards/:boardId/posts/:id/edit" 
+            element={<EditPost />}
+          />
         </Route>
+         {/* 이벤트 생성 */}
+         <Route
+            path="/boards/:boardId/posts/:id/events"
+            element={<Events />}
+          /> 
+          {/* 이벤트 수정 */}
+          <Route
+            path="/boards/:boardId/posts/:id/events/:eventId/edit"
+            element={<Events />}
+          />
       </Routes>
     </BrowserRouter>
   )

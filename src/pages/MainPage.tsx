@@ -16,7 +16,7 @@ interface Post {
 const API_BASE_URL = 'https://dev-moyeora.glitch.me'
 
 const MainPage: React.FC = () => {
-  const [boardItems, setBoardItems] = useState<BoardItem[]>([])
+  const [boardItems, setBoardItems] = useState<BoardItem[]>([]) // 게시판 목록 상태
   const [postsForBoards, setPostsForBoards] = useState<Record<number, Post[]>>(
     {}
   )
