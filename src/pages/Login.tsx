@@ -201,7 +201,7 @@ export default function Login() {
           </Button>
         </FormControl>
         <Typography sx={{ textAlign: 'center' }}>
-          계정이 이미 있으신가요?{'  '}
+          계정이 없으신가요?{'  '}
           <Link href="/signup" variant="body2" sx={{ alignSelf: 'center' }}>
             회원가입
           </Link>
