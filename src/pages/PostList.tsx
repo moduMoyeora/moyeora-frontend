@@ -111,7 +111,7 @@ const PostList: React.FC = () => {
     )
 
   return (
-    <Box maxWidth="1200px" mx="auto" mt={4}>
+    <Box sx={{ maxWidth: '1200px', width: '100%', mx: 'auto' }} mt={4}>
       <Box
         display="flex"
         justifyContent="space-between"
