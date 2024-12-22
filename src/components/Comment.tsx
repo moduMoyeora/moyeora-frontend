@@ -39,7 +39,7 @@ const CommentSection = styled(Paper)(({ theme }) => ({
   padding: '2rem',
   marginTop: 'auto', // Push comments to bottom
   width: '100%',
-  backgroundColor: '#fafafa',
+  backgroundColor: 'white',
 }))
 export interface CommentProps {
   boardId: string
