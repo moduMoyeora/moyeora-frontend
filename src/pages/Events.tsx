@@ -60,38 +60,47 @@ function Events() {
     },
   })
 
+  // 이벤트 조회 함수
+  const getEventData = async () => {
+    try {
+      const response = await client.get(
+        `/boards/${boardId}/posts/${id}/events`
+      )
+      return response.data;
+    } catch (error) {
+      return null;
+    }
+  };
+  
   useEffect(() => {
     const fetchEventData = async () => {
-      try {
-        // 먼저 이벤트 데이터가 존재하는지 확인
-        const response = await client.get(
-          `/boards/${boardId}/posts/${id}/events`
-        )
-
-        // 데이터가 존재하면 수정 모드로 전환
-        if (response.data && Object.keys(response.data).length > 0) {
-          setInitialData(response.data)
-          setIsEdit(true)
-
-          const eventDateTime = dayjs(response.data.event_time)
-          // 폼 초기화
-          reset({
-            location: response.data.location,
-            date: eventDateTime.startOf('day'),
-            time: eventDateTime,
-          })
-        }
-      } catch (error: any) {
-        if (error.response?.status === 500) {
-          console.error('Server Error:', error)
-          alert('서버 오류가 발생했습니다.')
-          navigate(`/boards/${boardId}/posts/${id}`)
-        }
+      const eventData = await getEventData();
+      
+      if (eventData && eventData.location && eventData.event_time) {
+        // 수정 모드: 데이터가 존재하고 필수 필드가 있는 경우
+        setInitialData(eventData);
+        setIsEdit(true);
+        
+        const eventDateTime = dayjs(eventData.event_time);
+        reset({
+          location: eventData.location,
+          date: eventDateTime,
+          time: eventDateTime
+        });
+      } else {
+        // 등록 모드: 데이터가 없거나 필수 필드가 없는 경우
+        setIsEdit(false);
+        setInitialData(null);
+        reset({
+          location: '',
+          date: null,
+          time: null
+        });
       }
-    }
-
-    fetchEventData()
-  }, [id, boardId, reset])
+    };
+  
+    fetchEventData();
+  }, [id, boardId, reset]);
 
   const onSubmit = async (data: FormInputs) => {
     try {
