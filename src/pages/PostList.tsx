@@ -40,8 +40,8 @@ const PostList: React.FC = () => {
       try {
         setIsLoading(true)
         const response = await axios.get(
-          // `${API_BASE_URL}/boards`
-          `/boards`
+          `${API_BASE_URL}/boards`
+          // `/boards` -- 프록시 경로
         )
         const boards = response.data
 
@@ -71,8 +71,8 @@ const PostList: React.FC = () => {
     setError(null)
     try {
       const response = await axios.get(
-        // `${API_BASE_URL}/boards/${boardId}/posts`,
-        `/boards/${boardId}/posts`,
+        `${API_BASE_URL}/boards/${boardId}/posts`,
+        // `/boards/${boardId}/posts`, 프록시 경로
         {
           params: { page: currentPage },
         }

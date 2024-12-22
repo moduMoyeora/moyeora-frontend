@@ -13,6 +13,8 @@ interface Post {
   title: string
 }
 
+const API_BASE_URL = 'https://dev-moyeora.glitch.me'
+
 const MainPage: React.FC = () => {
   const [boardItems, setBoardItems] = useState<BoardItem[]>([])
   const [postsForBoards, setPostsForBoards] = useState<Record<number, Post[]>>(
@@ -27,7 +29,7 @@ const MainPage: React.FC = () => {
     const fetchBoards = async () => {
       setIsLoading(true)
       try {
-        const response = await axios.get('/boards', {
+        const response = await axios.get('API_BASE_URL/boards', {
           params: { limit: itemsPerPage, currentPage },
         })
         console.log('Fetched Boards:', response.data) // 응답 데이터 확인
@@ -47,9 +49,12 @@ const MainPage: React.FC = () => {
       const postsByBoard: Record<number, Post[]> = {}
       try {
         const promises = boardItems.map(async (board) => {
-          const response = await axios.get(`/boards/${board.id}/posts`, {
-            params: { limit: 3 },
-          })
+          const response = await axios.get(
+            `API_BASE_URL/boards/${board.id}/posts`,
+            {
+              params: { limit: 3 },
+            }
+          )
           console.log(`Fetched Posts for board ${board.id}:`, response.data) // 각 게시판의 게시물 확인
           if (response.data && response.data.posts) {
             postsByBoard[board.id] = response.data.posts
