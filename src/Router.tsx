@@ -38,7 +38,7 @@ const Router: React.FC = () => {
           /> 
           {/* 이벤트 수정 */}
           <Route
-            path="/boards/:boardId/posts/:id/events/:eventId/edit"
+            path="/boards/:boardId/posts/:id/events/edit"
             element={<Events />}
           />
       </Routes>
