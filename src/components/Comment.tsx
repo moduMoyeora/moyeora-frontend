@@ -44,6 +44,7 @@ export interface CommentProps {
   postId: string
 }
 interface Comment {
+  member_id: string
   id: string | number
   nickname: string
   content: string
@@ -62,6 +63,7 @@ export default function Comment() {
   const [totalPages, setTotalPages] = useState(0)
   const [comments, setComments] = useState([
     {
+      member_id: '',
       id: '',
       nickname: '',
       content: '',
@@ -124,7 +126,32 @@ export default function Comment() {
       console.log('Error posting comment:', response)
     }
   }
-
+  const handleEditComment = async () => {
+    const response = await editCommentById(boardId, postId, 'commentId', 'data')
+    if (response) {
+      if (response.status === 200 || response.status === 201) {
+        console.log('댓글 수정 완료')
+        getComments()
+      } else {
+        console.log('Error editing comment:', response)
+      }
+    } else {
+      console.log('Error editing comment:', response)
+    }
+  }
+  const handleDeleteComment = async (commentId: string) => {
+    const response = await deleteCommentById(boardId, postId, commentId)
+    if (response) {
+      if (response.status === 204 || response.status === 200) {
+        console.log('댓글 삭제 완료')
+        getComments()
+      } else {
+        console.log('Error deleting comment:', response)
+      }
+    } else {
+      console.log('Error deleting comment:', response)
+    }
+  }
   return (
     <Container
       sx={{
@@ -178,6 +205,14 @@ export default function Comment() {
                   }
                   secondary={comment.content}
                 />
+                {user_id === comment.member_id ? (
+                  <div>
+                    <Button onClick={handleEditComment}>수정</Button>{' '}
+                    <Button onClick={() => handleDeleteComment(comment.id)}>
+                      삭제
+                    </Button>
+                  </div>
+                ) : null}
               </ListItem>
               <Divider variant="inset" component="li" />
             </React.Fragment>

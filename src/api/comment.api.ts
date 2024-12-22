@@ -44,7 +44,7 @@ export const deleteCommentById = async (
   commentId: string
 ) => {
   const response = await client.delete(
-    `/boards/${boardId}/posts/${postId}/comments`
+    `/boards/${boardId}/posts/${postId}/comments/${commentId}`
   )
   return response
 }

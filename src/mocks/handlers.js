@@ -339,6 +339,16 @@ export const handlers = [
                 nickname: '차수빈',
                 email: 'subin@test.com',
               },
+              {
+                id: 19,
+                post_id: 1,
+                member_id: 3,
+                content: '추가 댓글',
+                created_at: '2024-12-21T10:22:08.000Z',
+                updated_at: '2024-12-21T10:22:08.000Z',
+                nickname: '유빈',
+                email: 'yubeen@test.com',
+              },
             ],
             pagination: {
               totalCount: 6,
@@ -389,7 +399,7 @@ export const handlers = [
     ({ params }) => {
       const { boardId, postId, commentId } = params
 
-      if (boardId === '1' && postId === '1' && commentId === '16') {
+      if (boardId === '1' && postId === '1' && commentId === '19') {
         return new HttpResponse(null, {
           status: 204,
           statusText: 'No Content',
