@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { createClient } from '../api/http'
 import Comment from '../components/Comment'
 import parse from 'html-react-parser' //HTML 문자열을 React 에서 렌더링하기
@@ -57,6 +57,9 @@ const Post: React.FC = () => {
   const client = createClient()
   const currentUserId = useAuthStore((state) => state.user_id) //현재 로그인한 사용자 ID
 
+  const location = useLocation();
+  const eventIdFromLocation = location.state?.eventId;
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -82,7 +85,7 @@ const Post: React.FC = () => {
 
   const EditEvent = () => { // 모임 일정 수정
     handleClose();
-    navigate(`/boards/${boardId}/posts/${id}/events/${eventId}/edit`);
+    navigate(`/boards/${boardId}/posts/${id}/events/${eventIdFromLocation}/edit`);
   }
 
   const DeleteEvent = async () => { // 모임 일정 삭제
