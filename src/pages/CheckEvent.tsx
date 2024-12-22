@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { PiDotsThreeCircleVerticalThin } from 'react-icons/pi'
 
-export interface eventData {
+interface eventData {
   location: string
   time: string
 }

@@ -19,15 +19,21 @@ import { Controller, useForm } from 'react-hook-form'
 import { createClient } from '../api/http'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { eventData } from './CheckEvent'
 
-interface FormInputs {
+interface FormInputs { // 폼 입력 값 타입 정의
   location: string
   date: Dayjs | null
   time: Dayjs | null
 }
 
-interface SubmitDataType {
+interface eventData { // 서버 응답 데이터 타입 정의
+  id: number;
+  post_id: number;
+  location: string;
+  event_time: string; 
+}
+
+interface SubmitDataType { // 서버로 전송할 데이터 타입 정의
   location: string
   time: string
 }
@@ -49,8 +55,8 @@ function Events() {
   } = useForm<FormInputs>({
     defaultValues: {
       location: initialData?.location || '',
-      date: initialData?.time ? dayjs(initialData.time) : null,
-      time: initialData?.time ? dayjs(initialData.time) : null,
+      date: initialData?.event_time ? dayjs(initialData.event_time) : null,
+      time: initialData?.event_time ? dayjs(initialData.event_time) : null,
     },
   })
 
@@ -112,10 +118,8 @@ function Events() {
           submitData
         )
         alert('모임 일정이 등록되었습니다!')
-        console.log('eventId:' + response.data.id)
-
-        navigate(`/boards/${boardId}/posts/${id}`) //게시글 상세 페이지로 이동
       }
+      navigate(`/boards/${boardId}/posts/${id}`) //게시글 상세 페이지로 이동
     } catch (error) {
       alert(isEdit ? '모임 일정 수정 실패!' : '모임 일정 등록 실패!')
       console.error('Error:', error)
