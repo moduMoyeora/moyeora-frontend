@@ -21,20 +21,11 @@ export const useAuthStore = create<StoreState>()(
       user_id: null,
       isLoggedIn: false,
       storeLogin: (id: string) => {
-        if (id) {
-          set({
-            isLoggedIn: true,
-            user_id: id,
-          })
-          localStorage.setItem('user_id', id)
-        } else {
-          console.warn('there is no user id')
-          set({
-            isLoggedIn: false,
-            user_id: null,
-          })
-          localStorage.removeItem('user_id')
-        }
+        set({
+          isLoggedIn: true,
+          user_id: id,
+        })
+        localStorage.setItem('user_id', id)
       },
       storeLogout: () => {
         console.log('logout')
