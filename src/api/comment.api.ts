@@ -29,11 +29,11 @@ export const editCommentById = async (
   boardId: string,
   postId: string,
   commentId: string,
-  data: string
+  content: string
 ) => {
   const response = await client.put(
     `/boards/${boardId}/posts/${postId}/comments/${commentId}`,
-    { data }
+    { content }
   )
   return response
 }

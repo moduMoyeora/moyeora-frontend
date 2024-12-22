@@ -417,19 +417,13 @@ export const handlers = [
     async ({ params, request }) => {
       const { boardId, postId, commentId } = params
       const body = await request.json()
-
-      if (
-        boardId === '1' &&
-        postId === '32' &&
-        commentId === '15' &&
-        body.content === '댓글 수정'
-      ) {
+      if (boardId === '1' && postId === '1' && commentId === '19') {
         return new HttpResponse(
           JSON.stringify({
-            id: 15,
-            post_id: 32,
-            member_id: 4,
-            content: '댓글 수정',
+            id: 19,
+            post_id: 1,
+            member_id: 3,
+            content: body.content,
             created_at: '2024-12-21T13:02:45.000Z',
             updated_at: '2024-12-21T13:03:12.000Z',
           }),

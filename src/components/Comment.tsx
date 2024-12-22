@@ -15,8 +15,11 @@ import {
   Typography,
   TextField,
   Button,
-  Card,
-  CardContent,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
   List,
   ListItem,
   ListItemText,
@@ -28,11 +31,9 @@ import {
   Paper,
 } from '@mui/material'
 import { styled } from '@mui/system'
-import { FaRegComment, FaRegClock, FaUser } from 'react-icons/fa'
-import { get } from 'http'
-import { updateUser } from '../api/auth.api'
+import { FaRegComment, FaUser, FaPen, FaTrash } from 'react-icons/fa'
 import { set } from 'react-hook-form'
-import { resolveTimeViewsResponse } from '@mui/x-date-pickers/internals'
+
 const CommentSection = styled(Paper)(({ theme }) => ({
   padding: '2rem',
   marginTop: 'auto', // Push comments to bottom
@@ -60,7 +61,11 @@ export default function Comment() {
   const [newComment, setNewComment] = useState<string>('')
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(0)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [editingComment, setEditingComment] = useState({
+    commentId: '',
+    content: '',
+  })
   const [comments, setComments] = useState([
     {
       member_id: '',
@@ -112,7 +117,7 @@ export default function Comment() {
   ) => {
     setPage(value)
   }
-  const handleCommentSubmit = async () => {
+  const handleMakeNewComment = async () => {
     const response = await postCommentById(boardId, postId, newComment)
     if (response) {
       if (response.status === 200 || response.status === 201) {
@@ -126,18 +131,9 @@ export default function Comment() {
       console.log('Error posting comment:', response)
     }
   }
-  const handleEditComment = async () => {
-    const response = await editCommentById(boardId, postId, 'commentId', 'data')
-    if (response) {
-      if (response.status === 200 || response.status === 201) {
-        console.log('댓글 수정 완료')
-        getComments()
-      } else {
-        console.log('Error editing comment:', response)
-      }
-    } else {
-      console.log('Error editing comment:', response)
-    }
+  const handleEditDialog = async (id: string, content: string) => {
+    setEditingComment({ commentId: id, content: content })
+    setDialogOpen(true)
   }
   const handleDeleteComment = async (commentId: string) => {
     const response = await deleteCommentById(boardId, postId, commentId)
@@ -152,12 +148,33 @@ export default function Comment() {
       console.log('Error deleting comment:', response)
     }
   }
+  const handleClose = () => {
+    setDialogOpen(false)
+  }
+  const handleEditComment = async (content: string) => {
+    const response = await editCommentById(
+      boardId,
+      postId,
+      editingComment.commentId,
+      content
+    )
+    if (response) {
+      if (response.status === 200 || response.status === 201) {
+        console.log('댓글 수정 완료')
+        getComments()
+      } else {
+        console.log('Error editing comment:', response)
+      }
+    } else {
+      console.log('Error editing comment:', response)
+    }
+  }
   return (
     <Container
       sx={{
         mt: 3,
-        display: 'flex',
         p: 0,
+        display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
       }}
@@ -207,9 +224,19 @@ export default function Comment() {
                 />
                 {user_id === comment.member_id ? (
                   <div>
-                    <Button onClick={handleEditComment}>수정</Button>{' '}
+                    <Button
+                      onClick={() =>
+                        handleEditDialog(comment.id, comment.content)
+                      }
+                    >
+                      <FaPen
+                        style={{ color: 'black', fontSize: '15px' }}
+                      ></FaPen>
+                    </Button>{' '}
                     <Button onClick={() => handleDeleteComment(comment.id)}>
-                      삭제
+                      <FaTrash
+                        style={{ color: 'black', fontSize: '15px' }}
+                      ></FaTrash>
                     </Button>
                   </div>
                 ) : null}
@@ -242,13 +269,57 @@ export default function Comment() {
             variant="contained"
             color="primary"
             disabled={!newComment.trim()}
-            onClick={handleCommentSubmit}
+            onClick={handleMakeNewComment}
             startIcon={<FaRegComment />}
           >
             댓글 남기기
           </Button>
         </Box>
       </CommentSection>
+      <div>
+        <Dialog
+          open={dialogOpen}
+          onClose={handleClose}
+          maxWidth="md"
+          PaperProps={{
+            component: 'form',
+            onSubmit: async (event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault()
+
+              const formData = new FormData(event.currentTarget)
+              const formJson = Object.fromEntries((formData as any).entries())
+              const content = formJson.content
+              console.log('댓글 수정 완료', content)
+              handleEditComment(content)
+              handleClose()
+            },
+          }}
+        >
+          <DialogTitle>댓글 수정</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              fullWidth
+              id="content"
+              name="content"
+              label="댓글"
+              value={editingComment.content}
+              type="content"
+              variant="standard"
+              onChange={(e) =>
+                setEditingComment({
+                  ...editingComment,
+                  content: e.target.value,
+                })
+              }
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit">제출</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </Container>
   )
 }
