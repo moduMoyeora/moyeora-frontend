@@ -33,6 +33,12 @@ export const getUser = async (user_id: string) => {
 }
 
 export const updateUser = async (user_id: string, user: User) => {
-  const response = await client.put(`/users/profile/${user_id}`, user)
+  let UpdatedUser: any = new Object()
+  for (const [key, value] of Object.entries(user)) {
+    if (value !== '' && value !== undefined && value !== null) {
+      UpdatedUser[key] = value
+    }
+  }
+  const response = await client.put(`/users/profile/${user_id}`, UpdatedUser)
   return response
 }

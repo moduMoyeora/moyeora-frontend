@@ -1,5 +1,9 @@
 import './MyPage.css'
-
+import {
+  Unstable_NumberInput as BaseNumberInput,
+  NumberInputProps,
+  numberInputClasses,
+} from '@mui/base/Unstable_NumberInput'
 import {
   Alert,
   Box,
@@ -23,11 +27,31 @@ import { FaEdit, FaUser } from 'react-icons/fa'
 import { FaMapLocationDot, FaRegMessage } from 'react-icons/fa6'
 import { getUser, updateUser } from '../api/auth.api'
 import { useEffect, useState } from 'react'
-
+import React from 'react'
 import { BsGenderAmbiguous } from 'react-icons/bs'
 import { User } from '../model/users'
 import { useAuthStore } from '../store/authStore'
 import { useNavigate } from 'react-router-dom'
+
+const NumberInput = React.forwardRef(function CustomNumberInput(
+  props: NumberInputProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
+  return (
+    <BaseNumberInput
+      slotProps={{
+        incrementButton: {
+          children: '▴',
+        },
+        decrementButton: {
+          children: '▾',
+        },
+      }}
+      {...props}
+      ref={ref}
+    />
+  )
+})
 
 export default function MyPage() {
   const navigate = useNavigate()
@@ -40,13 +64,8 @@ export default function MyPage() {
   })
   const [user, setUser] = useState<User>({
     nickname: '',
-    name: '',
-    description: '',
-    gender: '',
-    age: 0,
-    region: '',
   })
-  const [editUser, setEditUser] = useState<User>(user)
+  const [editUser, setEditUser] = useState<User>({ nickname: '' })
 
   const getUserInformation = async () => {
     if (user_id) {
@@ -54,6 +73,10 @@ export default function MyPage() {
         const response = await getUser(user_id)
         if (response.status === 200) {
           setUser(response.data)
+        } else if (response.status === 401) {
+          console.log('Unauthorized access detected. Logging out.')
+          useAuthStore.getState().storeLogout()
+          navigate('/login')
         } else {
           console.log('User information fetch failed:', response)
         }
@@ -81,7 +104,8 @@ export default function MyPage() {
   const handleDataChange = (
     e: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
-    const { name, value } = e.target
+    const name = e.target.name
+    const value = e.target.value
     setEditUser((prevUser) => ({
       ...prevUser,
       [name]: value,
@@ -98,6 +122,7 @@ export default function MyPage() {
             value: '저장되었습니다.',
           })
           setUser(response.data)
+          getUserInformation()
         } else {
           setAlertOption({
             severity: 'error',
@@ -105,7 +130,6 @@ export default function MyPage() {
           })
         }
         setAlert(true)
-        updateUser(user_id.toString(), user)
         setOpen(false)
       } catch (error) {
         console.log(error)
@@ -118,7 +142,14 @@ export default function MyPage() {
     setEditUser({ ...user })
     setOpen(true)
   }
-
+  const numberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    const numericValue = value.replace(/[^0-9]/g, '')
+    setEditUser((prevUser) => ({
+      ...prevUser,
+      age: numericValue,
+    }))
+  }
   return (
     <div className="page" style={{ width: '50%' }}>
       <Container maxWidth="md" sx={{ width: '100%' }}>
@@ -161,7 +192,7 @@ export default function MyPage() {
                     나이
                   </Typography>
                   <Typography variant="body1" className="mypage-font-style">
-                    {user?.age || ''}
+                    {user?.age}
                   </Typography>
                 </Box>
                 <Box className="profile-field">
@@ -226,7 +257,7 @@ export default function MyPage() {
                 variant="filled"
                 label="닉네임"
                 name="nickname"
-                value={editUser?.nickname || ''}
+                value={editUser?.nickname ?? ''}
                 onChange={handleDataChange as TextFieldProps['onChange']}
               />
             </div>
@@ -235,7 +266,7 @@ export default function MyPage() {
                 variant="filled"
                 label="실명"
                 name="name"
-                value={editUser?.name || ''}
+                value={editUser?.name ?? ''}
                 onChange={handleDataChange as TextFieldProps['onChange']}
               />
             </div>
@@ -245,8 +276,9 @@ export default function MyPage() {
                 variant="filled"
                 label="나이"
                 name="age"
-                value={editUser?.age || ''}
-                onChange={handleDataChange as TextFieldProps['onChange']}
+                inputMode="numeric"
+                value={editUser?.age ?? ''}
+                onChange={numberChange}
               />
             </div>
             <div className="form-content">
@@ -254,7 +286,7 @@ export default function MyPage() {
                 sx={{ width: '100px' }}
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={editUser?.gender || ''}
+                value={editUser?.gender ?? ''}
                 label="gender"
                 name="gender"
                 onChange={handleDataChange}
@@ -278,7 +310,7 @@ export default function MyPage() {
                 variant="filled"
                 label="소개"
                 name="description"
-                value={editUser?.description || ''}
+                value={editUser?.description ?? ''}
                 onChange={handleDataChange as TextFieldProps['onChange']}
               />
             </div>
