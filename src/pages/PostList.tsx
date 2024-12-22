@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import axios from 'axios'
+import { httpClient } from '../api/http' // 경로를 맞춰서 가져옵니다.
 import {
   Box,
   Typography,
@@ -32,15 +32,13 @@ const PostList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const API_BASE_URL = 'https://dev-moyeora.glitch.me'
-
   // 게시판 제목 가져오기
   useEffect(() => {
     const fetchBoardTitle = async () => {
       try {
         setIsLoading(true)
-        const response = await axios.get(
-          `${API_BASE_URL}/boards`
+        const response = await httpClient.get(
+          `/boards`
           // `/boards` -- 프록시 경로
         )
         const boards = response.data
@@ -70,8 +68,8 @@ const PostList: React.FC = () => {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/boards/${boardId}/posts`,
+      const response = await httpClient.get(
+        `/boards/${boardId}/posts`,
         // `/boards/${boardId}/posts`, 프록시 경로
         {
           params: { page: currentPage },

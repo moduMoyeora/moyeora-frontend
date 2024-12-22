@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Grid, Paper, Typography, Pagination } from '@mui/material'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import { httpClient } from '../api/http' // 경로를 맞춰서 가져옵니다.
 
 interface BoardItem {
   id: number
@@ -12,8 +12,6 @@ interface Post {
   id: number
   title: string
 }
-
-const API_BASE_URL = 'https://dev-moyeora.glitch.me'
 
 const MainPage: React.FC = () => {
   const [boardItems, setBoardItems] = useState<BoardItem[]>([]) // 게시판 목록 상태
@@ -29,7 +27,7 @@ const MainPage: React.FC = () => {
     const fetchBoards = async () => {
       setIsLoading(true)
       try {
-        const response = await axios.get('API_BASE_URL/boards', {
+        const response = await httpClient.get('/boards', {
           params: { limit: itemsPerPage, currentPage },
         })
         console.log('Fetched Boards:', response.data) // 응답 데이터 확인
@@ -49,12 +47,9 @@ const MainPage: React.FC = () => {
       const postsByBoard: Record<number, Post[]> = {}
       try {
         const promises = boardItems.map(async (board) => {
-          const response = await axios.get(
-            `API_BASE_URL/boards/${board.id}/posts`,
-            {
-              params: { limit: 3 },
-            }
-          )
+          const response = await httpClient.get(`/boards/${board.id}/posts`, {
+            params: { limit: 3 },
+          })
           console.log(`Fetched Posts for board ${board.id}:`, response.data) // 각 게시판의 게시물 확인
           if (response.data && response.data.posts) {
             postsByBoard[board.id] = response.data.posts
