@@ -11,6 +11,7 @@
   z-index: 1000;
   box-sizing: border-box;
   flex-wrap: wrap;
+  height: 55px;
 }
 
 .navbar-title {

@@ -121,7 +121,7 @@ const Post: React.FC = () => {
   const isAuthor = currentUserId === member_id // 현재 로그인한 사용자와 글의 작성자가 같은지 확인
 
   return (
-    <ContentContainer>
+    <ContentContainer sx={{ marginTop: '60px' }}>
       <HeaderBox>
         <Typography
           variant="subtitle1"
@@ -191,7 +191,7 @@ const Post: React.FC = () => {
           {parse(content)}
         </Typography>
       </Box>
-      <Comment boardId={boardId || ''} postId={id || ''} />
+      <Comment />
     </ContentContainer>
   )
 }

@@ -72,7 +72,6 @@ export default function Login() {
         return
       }
       const res = await login(email, password)
-
       if (res.status === 200 || res.status === 201) {
         storeLogin(res.data.id)
         alert('로그인 완료')

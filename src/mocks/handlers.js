@@ -216,7 +216,7 @@ export const handlers = [
         return Response.json({
           message: '게시물 조회 성공',
           data: {
-            board_name: 'string',
+            board_name: '보드 이름',
             title: 'string',
             author: 'string',
             content: 'string',
@@ -258,7 +258,8 @@ export const handlers = [
       }
     }
   ),
-  //댓글
+
+  //댓글 전체 조회회
   http.get(
     'https://dev-moyeora.glitch.me/boards/:boardId/posts/:postId/comments',
     ({ params }) => {
@@ -272,51 +273,136 @@ export const handlers = [
           }
         )
       }
-
-      const comments = [
-        {
-          id: 13,
-          post_id: 1,
-          member_id: 4,
-          content: '댓글 내용3',
-          created_at: '2024-12-21T12:57:59.000Z',
-          updated_at: '2024-12-21T12:57:59.000Z',
-          nickname: '임영재',
-          email: 'young@test.com',
-        },
-        {
-          id: 12,
-          post_id: 1,
-          member_id: 1,
-          content: '댓글 내용3',
-          created_at: '2024-12-21T11:45:21.000Z',
-          updated_at: '2024-12-21T11:45:21.000Z',
-          nickname: '차수빈',
-          email: 'subin@test.com',
-        },
-        {
-          id: 11,
-          post_id: 1,
-          member_id: 1,
-          content: '댓글 내용3',
-          created_at: '2024-12-21T10:29:00.000Z',
-          updated_at: '2024-12-21T10:29:00.000Z',
-          nickname: '차수빈',
-          email: 'subin@test.com',
-        },
-      ]
       return new HttpResponse(
         JSON.stringify({
           message: '댓글 목록 조회 성공',
           data: {
-            comments,
+            comments: [
+              {
+                id: 14,
+                post_id: 1,
+                member_id: 4,
+                content: '댓글 내용3',
+                created_at: '2024-12-21T13:02:22.000Z',
+                updated_at: '2024-12-21T13:02:22.000Z',
+                nickname: '임영재',
+                email: 'young@test.com',
+              },
+              {
+                id: 13,
+                post_id: 1,
+                member_id: 4,
+                content: '댓글 내용3',
+                created_at: '2024-12-21T12:57:59.000Z',
+                updated_at: '2024-12-21T12:57:59.000Z',
+                nickname: '임영재',
+                email: 'young@test.com',
+              },
+              {
+                id: 12,
+                post_id: 1,
+                member_id: 1,
+                content: '댓글 내용3',
+                created_at: '2024-12-21T11:45:21.000Z',
+                updated_at: '2024-12-21T11:45:21.000Z',
+                nickname: '차수빈',
+                email: 'subin@test.com',
+              },
+              {
+                id: 11,
+                post_id: 1,
+                member_id: 1,
+                content: '댓글 내용3',
+                created_at: '2024-12-21T10:29:00.000Z',
+                updated_at: '2024-12-21T10:29:00.000Z',
+                nickname: '차수빈',
+                email: 'subin@test.com',
+              },
+              {
+                id: 10,
+                post_id: 1,
+                member_id: 1,
+                content: '댓글 내용2',
+                created_at: '2024-12-21T10:22:08.000Z',
+                updated_at: '2024-12-21T10:22:08.000Z',
+                nickname: '차수빈',
+                email: 'subin@test.com',
+              },
+              {
+                id: 14,
+                post_id: 1,
+                member_id: 1,
+                content: '댓글 내용3',
+                created_at: '2024-12-21T10:22:08.000Z',
+                updated_at: '2024-12-21T10:22:08.000Z',
+                nickname: '차수빈',
+                email: 'subin@test.com',
+              },
+            ],
+            pagination: {
+              totalCount: 6,
+              currentPage: 1,
+              totalPages: 2,
+              limit: 5,
+            },
           },
         }),
         {
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
         }
       )
+    }
+  ),
+  http.delete(
+    'https://dev-moyeora.glitch.me/boards/:boardId/posts/:postId/comments/:commentId',
+    ({ params }) => {
+      const { boardId, postId, commentId } = params
+
+      if (boardId === '1' && postId === '1' && commentId === '16') {
+        return new HttpResponse(null, {
+          status: 204,
+          statusText: 'No Content',
+        })
+      }
+
+      return new HttpResponse(JSON.stringify({ message: '삭제 실패' }), {
+        status: 400,
+        statusText: 'Bad Request',
+      })
+    }
+  ),
+  http.put(
+    'https://dev-moyeora.glitch.me/boards/:boardId/posts/:postId/comments/:commentId',
+    async ({ params, request }) => {
+      const { boardId, postId, commentId } = params
+      const body = await request.json()
+
+      if (
+        boardId === '1' &&
+        postId === '32' &&
+        commentId === '15' &&
+        body.content === '댓글 수정'
+      ) {
+        return new HttpResponse(
+          JSON.stringify({
+            id: 15,
+            post_id: 32,
+            member_id: 4,
+            content: '댓글 수정',
+            created_at: '2024-12-21T13:02:45.000Z',
+            updated_at: '2024-12-21T13:03:12.000Z',
+          }),
+          {
+            status: 200,
+            statusText: 'OK',
+          }
+        )
+      }
+
+      return new HttpResponse(JSON.stringify({ message: '수정 실패' }), {
+        status: 400,
+        statusText: 'Bad Request',
+      })
     }
   ),
 ]

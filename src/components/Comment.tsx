@@ -4,11 +4,12 @@ import { useAuthStore } from '../store/authStore'
 import {
   getCommentById,
   postCommentById,
-  putCommentById,
+  editCommentById,
   deleteCommentById,
   getCommentsByPostId,
 } from '../api/comment.api'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useLayoutEffect } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
 import {
   Container,
   Typography,
@@ -30,28 +31,37 @@ import { styled } from '@mui/system'
 import { FaRegComment, FaRegClock, FaUser } from 'react-icons/fa'
 import { get } from 'http'
 import { updateUser } from '../api/auth.api'
+import { set } from 'react-hook-form'
 const CommentSection = styled(Paper)(({ theme }) => ({
   padding: '2rem',
   marginBottom: '2rem',
   width: '100%',
   backgroundColor: '#fafafa',
 }))
-interface CommentProps {
+export interface CommentProps {
   boardId: string
   postId: string
 }
 interface Comment {
-  author: string
+  id: string | number
+  nickname: string
   content: string
   createdAt: string
-  id: string | number
+  updateAt: string
+  email: string
 }
 
-export default function Comment(props: CommentProps) {
-  const boardId = props.boardId
-  const postId = props.postId
+export default function Comment() {
+  const params = useParams<{ id: string; boardId: string }>()
+  const postId = params.id
+  const boardId = params.boardId
+  console.log(postId, boardId)
+
   const { user_id } = useAuthStore()
   const [newComment, setNewComment] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
   const [comments, setComments] = useState([
     {
       id: '',
@@ -62,40 +72,51 @@ export default function Comment(props: CommentProps) {
       email: '',
     },
   ])
+
   useEffect(() => {
-    if (postId) {
-      getComments(boardId, postId)
+    const getComments = async () => {
+      try {
+        setLoading(true)
+        if (boardId === undefined || postId === undefined) {
+          return new Error('게시판 ID와 게시글 ID가 필요합니다.')
+        }
+        const commentsResponse = await getCommentsByPostId(boardId, postId)
+        if (commentsResponse.status === 200) {
+          const getComments = commentsResponse.data.data.comments
+          setComments(getComments)
+
+          // const setSliceComments = comments.slice(startIndex, endIndex)
+          // setSlicedComments(setSliceComments)
+          //const currentComments = comments.slice(startIndex, endIndex)
+        } else {
+          console.log('Error fetching comments:', commentsResponse.status)
+        }
+      } catch (error) {
+        console.error('Error fetching comments:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [])
-  const [page, setPage] = useState(1)
-  const commentsPerPage = 2
-  const totalPages = Math.ceil(comments.length / commentsPerPage)
+    getComments()
+  }, [boardId, postId]) // 페이지 변경 시 데이터 로드
+  const commentsPerPage = 3
+  const pages = Math.ceil(comments.length / 3)
   const startIndex = (page - 1) * commentsPerPage
   const endIndex = startIndex + commentsPerPage
   const currentComments = comments.slice(startIndex, endIndex)
-  let totalCount = 0
-  let currentPage = 0
-  let totlaPages = 0
-  let limit = 0
+
+  if (!boardId || !postId) {
+    return <Typography>게시판 ID와 게시글 ID가 필요합니다.</Typography>
+  }
+  if (loading) {
+    return <Typography>Loading comments...</Typography> // 로딩 중일 때 표시할 내용
+  }
+
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     setPage(value)
-  }
-
-  const getComments = async (boardId: string, postId: string) => {
-    try {
-      const commentsResponse = await getCommentsByPostId(boardId, postId)
-      if (commentsResponse.status === 200) {
-        console.log('Comments fetched:')
-        setComments(commentsResponse.data.data.comments)
-      } else {
-        console.log('Error fetching comments:', commentsResponse.status)
-      }
-    } catch (error) {
-      console.error('Error fetching comments:', error)
-    }
   }
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
@@ -111,6 +132,7 @@ export default function Comment(props: CommentProps) {
       setNewComment('')
     }
   }
+
   return (
     <Container
       sx={{
@@ -123,8 +145,8 @@ export default function Comment(props: CommentProps) {
     >
       <CommentSection sx={{ width: '100%', flexGrow: 1 }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <FaRegComment style={{ marginRight: '8px', fontSize: '1.5rem' }} />
-          <Typography variant="h5" component="h2">
+          <FaRegComment style={{ marginRight: '5px', fontSize: '1.5rem' }} />
+          <Typography variant="h6" component="h2">
             댓글
           </Typography>
         </Box>
@@ -141,7 +163,10 @@ export default function Comment(props: CommentProps) {
                 <ListItemText
                   primary={
                     <Box
-                      sx={{ display: 'flex', justifyContent: 'space-between' }}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }}
                     >
                       <Typography
                         component="span"
@@ -168,7 +193,7 @@ export default function Comment(props: CommentProps) {
         </List>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
           <Pagination
-            count={totalPages}
+            count={pages}
             page={page}
             onChange={handlePageChange}
             color="primary"
