@@ -346,29 +346,28 @@ export const handlers = [
           }
         )
       }
-      // return new HttpResponse(
-      //   JSON.stringify({
-      //     message: '댓글 목록 조회 성공',
-
-      //     data: {
-      //       comments: dummy,
-      //       pagination: {
-      //         totalCount: 6,
-      //         currentPage: 1,
-      //         totalPages: 2,
-      //         limit: 5,
-      //       },
-      //     },
-      //   }),
-      //   {
-      //     status: 200,
-      //   }
-      // )
       return new HttpResponse(
-        JSON.stringify(null, {
-          status: 204,
-        })
+        JSON.stringify({
+          message: '댓글 목록 조회 성공',
+          data: {
+            comments: dummy,
+            pagination: {
+              totalCount: 6,
+              currentPage: 1,
+              totalPages: 2,
+              limit: 5,
+            },
+          },
+        }),
+        {
+          status: 200,
+        }
       )
+      // return new HttpResponse(
+      //   JSON.stringify(null, {
+      //     status: 204,
+      //   })
+      // )
     }
   ),
   http.post(
@@ -380,7 +379,6 @@ export const handlers = [
       const postId = url.pathname.split('/')[4] // :postId
       // 요청 본문에서 content를 추출
       const { content } = await request.json()
-      console.log('post id', postId)
       // 실제 DB와 상호작용하는 부분은 생략되고, 이 부분에서 응답을 반환합니다.
       // 정상적으로 댓글이 등록되었다고 가정하고, 응답을 구성합니다.
       const responseBody = {

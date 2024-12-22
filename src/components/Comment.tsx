@@ -102,7 +102,6 @@ export default function Comment() {
   const startIndex = (page - 1) * commentsPerPage
   const endIndex = startIndex + commentsPerPage
   const currentComments = comments.slice(startIndex, endIndex)
-  console.log(currentComments.length)
 
   if (!boardId || !postId) {
     return <Typography>게시판 ID와 게시글 ID가 필요합니다.</Typography>
