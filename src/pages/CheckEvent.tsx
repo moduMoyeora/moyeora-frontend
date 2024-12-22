@@ -52,29 +52,29 @@ function CheckEvent() {
     handleClose() // 메뉴 닫기
   }
 
-  // useEffect(() => {
-  //   const fetchEventData = async () => {
-  //     try {
-  //       const response = await client.get(
-  //         `/boards/${boardId}/posts/${id}/events/${eventId}`
-  //       )
-  //       console.log(response.data)
-  //       setEventData(response.data)
-  //     } catch (error) {
-  //       alert('모임 일정을 불러오는데 실패했습니다.')
-  //       console.error('Error:', error)
-  //     }
-  //   }
+  useEffect(() => {
+    const fetchEventData = async () => {
+      try {
+        const response = await client.get(
+          `/boards/${boardId}/posts/${id}/events/${eventId}`
+        )
+        console.log(response.data)
+        setEventData(response.data)
+      } catch (error) {
+        alert('모임 일정을 불러오는데 실패했습니다.')
+        console.error('Error:', error)
+      }
+    }
 
-  //   fetchEventData()
-  // }, [id, boardId,eventId])
+    fetchEventData()
+  }, [id, boardId,eventId])
 
-  // eventData가 없을 때 로딩 표시
-  // if (!eventData) {
-  //   return <div>Loading...</div>
-  // }
-  // // eventData가 있을 때만 구조분해할당
-  // const { location, time } = eventData
+  //eventData가 없을 때 로딩 표시
+  if (!eventData) {
+    return <div>Loading...</div>
+  }
+  // eventData가 있을 때만 구조분해할당
+  const { location, time } = eventData
 
   return (
     <Box mt={2} sx={{display:'flex'}}>

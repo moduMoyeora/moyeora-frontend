@@ -28,8 +28,8 @@ interface FormInputs {
 }
 
 interface SubmitDataType {
-  location: string;
-  time: string;
+  location: string
+  time: string
 }
 
 function Events() {
@@ -86,16 +86,16 @@ function Events() {
 
   const onSubmit = async (data: FormInputs) => {
     try {
-      const combinedDateTime= data.date
+      const combinedDateTime = data.date
         ?.hour(data.time?.hour() || 0)
         ?.minute(data.time?.minute() || 0)
         ?.second(0)
-        ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
 
       // 백엔드로 보낼 데이터 형식
       const submitData: SubmitDataType = {
         location: data.location,
-        time: combinedDateTime || ' '
+        time: combinedDateTime || ' ',
       }
       if (isEdit) {
         // 수정 요청
@@ -104,13 +104,22 @@ function Events() {
           submitData
         )
         alert('모임 일정이 수정되었습니다!')
+        navigate(`/boards/${boardId}/posts/${id}`) //게시글 상세 페이지로 이동
       } else {
         // 등록 요청
-        console.log(submitData);
-        await client.post(`/boards/${boardId}/posts/${id}/events`, submitData)
+        console.log(submitData)
+        const response = await client.post(
+          `/boards/${boardId}/posts/${id}/events`,
+          submitData
+        )
         alert('모임 일정이 등록되었습니다!')
+        console.log('eventId:' + response.data.id)
+
+        // 게시글 페이지로 이동할 때 state로 eventId 전달
+        navigate(`/boards/${boardId}/posts/${id}`, {
+          state: { eventId: response.data.id },
+        })
       }
-      navigate(`/boards/${boardId}/posts/${id}`) // 모임 일정 수정 또는 등록 완료 후 게시글 상세 페이지로 이동
     } catch (error) {
       alert(isEdit ? '모임 일정 수정 실패!' : '모임 일정 등록 실패!')
       console.error('Error:', error)
