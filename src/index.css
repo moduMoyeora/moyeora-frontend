@@ -8,6 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%; /* 화면 높이 */
   width: 100%; /* 화면 너비 */
+  overflow-x: hidden;
 }
 
 code {
