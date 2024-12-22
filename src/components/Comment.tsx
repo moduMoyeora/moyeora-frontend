@@ -52,6 +52,10 @@ interface Comment {
   createdAt: string
   updateAt: string
 }
+interface CommentData {
+  commentId: string | number
+  content: string
+}
 
 export default function Comment() {
   const params = useParams<{ id: string; boardId: string }>()
@@ -66,24 +70,19 @@ export default function Comment() {
     commentId: '',
     content: '',
   })
-  const [comments, setComments] = useState([
-    {
-      member_id: '',
-      id: '',
-      nickname: '',
-      content: '',
-      createdAt: '',
-      updateAt: '',
-    },
-  ])
+  const [comments, setComments] = useState([] as Comment[])
   const getComments = async () => {
     try {
       setLoading(true)
       if (boardId === undefined || postId === undefined) {
         return new Error('게시판 ID와 게시글 ID가 필요합니다.')
       }
+
       const commentsResponse = await getCommentsByPostId(boardId, postId)
-      if (commentsResponse.status === 200) {
+      if (commentsResponse.status === 204) {
+        console.log('댓글이 없습니다.')
+        setComments([])
+      } else if (commentsResponse.status === 200) {
         const getComments = commentsResponse.data.data.comments
         setComments(getComments)
       } else {
@@ -103,6 +102,7 @@ export default function Comment() {
   const startIndex = (page - 1) * commentsPerPage
   const endIndex = startIndex + commentsPerPage
   const currentComments = comments.slice(startIndex, endIndex)
+  console.log(currentComments.length)
 
   if (!boardId || !postId) {
     return <Typography>게시판 ID와 게시글 ID가 필요합니다.</Typography>
@@ -131,11 +131,13 @@ export default function Comment() {
       console.log('Error posting comment:', response)
     }
   }
-  const handleEditDialog = async (id: string, content: string) => {
-    setEditingComment({ commentId: id, content: content })
+  const handleEditDialog = async (id: string | number, content: string) => {
+    id.toString()
+    setEditingComment({ commentId: id.toString(), content: content })
     setDialogOpen(true)
   }
-  const handleDeleteComment = async (commentId: string) => {
+  const handleDeleteComment = async (commentId: string | number) => {
+    commentId = commentId.toString()
     const response = await deleteCommentById(boardId, postId, commentId)
     if (response) {
       if (response.status === 204 || response.status === 200) {

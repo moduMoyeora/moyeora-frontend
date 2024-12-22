@@ -346,23 +346,28 @@ export const handlers = [
           }
         )
       }
-      return new HttpResponse(
-        JSON.stringify({
-          message: '댓글 목록 조회 성공',
+      // return new HttpResponse(
+      //   JSON.stringify({
+      //     message: '댓글 목록 조회 성공',
 
-          data: {
-            comments: dummy,
-            pagination: {
-              totalCount: 6,
-              currentPage: 1,
-              totalPages: 2,
-              limit: 5,
-            },
-          },
-        }),
-        {
-          status: 200,
-        }
+      //     data: {
+      //       comments: dummy,
+      //       pagination: {
+      //         totalCount: 6,
+      //         currentPage: 1,
+      //         totalPages: 2,
+      //         limit: 5,
+      //       },
+      //     },
+      //   }),
+      //   {
+      //     status: 200,
+      //   }
+      // )
+      return new HttpResponse(
+        JSON.stringify(null, {
+          status: 204,
+        })
       )
     }
   ),
