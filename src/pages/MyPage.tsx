@@ -129,7 +129,6 @@ export default function MyPage() {
           })
         }
         setAlert(true)
-        updateUser(user_id.toString(), user)
         setOpen(false)
       } catch (error) {
         console.log(error)
