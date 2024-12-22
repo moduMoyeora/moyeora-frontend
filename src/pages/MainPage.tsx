@@ -14,7 +14,7 @@ interface Post {
 }
 
 const MainPage: React.FC = () => {
-  // // 임시 데이터
+  // 임시 데이터
   // const freeBoardItems: BoardItem[] = [
   //   { id: 1, title: '자유게시판' },
   //   { id: 2, title: '공지사항' },

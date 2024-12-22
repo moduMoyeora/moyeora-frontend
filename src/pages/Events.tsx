@@ -13,10 +13,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import 'dayjs/locale/ko'
 import { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { Controller, useForm } from 'react-hook-form'
 import { createClient } from '../api/http'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { eventData } from './CheckEvent'
 
 interface FormInputs {
   location: string
@@ -24,47 +27,92 @@ interface FormInputs {
   time: Dayjs | null
 }
 
+interface SubmitDataType {
+  location: string;
+  time: string;
+}
+
 function Events() {
+  const [isEdit, setIsEdit] = useState(false)
+  const [initialData, setInitialData] = useState<eventData | null>(null)
+  const { boardId, id, eventId } = useParams<{
+    boardId: string
+    id: string
+    eventId: string
+  }>()
+  const client = createClient()
+  const navigate = useNavigate()
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormInputs>({
     defaultValues: {
-      location: '',
-      date: null,
-      time: null,
+      location: initialData?.location || '',
+      date: initialData?.time ? dayjs(initialData.time) : null,
+      time: initialData?.time ? dayjs(initialData.time) : null,
     },
-  });
+  })
 
-  const client = createClient();
-  const navigate = useNavigate();
-  const { boardId, id } = useParams<{ boardId: string; id: string }>();
+  // URL에서 이벤트 ID를 확인하여 수정 모드인지 판단
+  useEffect(() => {
+    const fetchEventData = async () => {
+      if (eventId) {
+        // URL에 id가 있으면 수정 모드
+        try {
+          const response = await client.get(
+            `/boards/${boardId}/posts/${id}/events/${eventId}`
+          )
+          setInitialData(response.data)
+          setIsEdit(true)
+
+          // 폼 초기화
+          reset({
+            location: response.data.location,
+            date: dayjs(response.data.time),
+            time: dayjs(response.data.time),
+          })
+        } catch (error) {
+          console.error('Error:', error)
+          alert('모임 일정을 불러오는데 실패했습니다.')
+          navigate(`/boards/${boardId}/posts/${id}`) // 오류 시 게시글 페이지로 이동
+        }
+      }
+    }
+
+    fetchEventData()
+  }, [id, boardId, eventId, reset])
 
   const onSubmit = async (data: FormInputs) => {
     try {
-      const combinedDateTime = data.date
+      const combinedDateTime= data.date
         ?.hour(data.time?.hour() || 0)
         ?.minute(data.time?.minute() || 0)
         ?.second(0)
-        ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
+        ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
       // 백엔드로 보낼 데이터 형식
-      const submitData = {
+      const submitData: SubmitDataType = {
         location: data.location,
-        time: combinedDateTime,
+        time: combinedDateTime || ' '
       }
-      console.log(submitData)
-
-      const response = await client.post(
-        `/boards/${boardId}/posts/${id}/events`
-      )
-      console.log('Server response:', response.data)
-
-      alert('모임 일정 등록 성공!')
-      navigate(`/boards/${boardId}/posts/${id}`) // 모임 일정 등록 완료 후 게시글 상세 페이지로 이동
+      if (isEdit) {
+        // 수정 요청
+        await client.put(
+          `/boards/${boardId}/posts/${id}/events/${eventId}`,
+          submitData
+        )
+        alert('모임 일정이 수정되었습니다!')
+      } else {
+        // 등록 요청
+        console.log(submitData);
+        await client.post(`/boards/${boardId}/posts/${id}/events`, submitData)
+        alert('모임 일정이 등록되었습니다!')
+      }
+      navigate(`/boards/${boardId}/posts/${id}`) // 모임 일정 수정 또는 등록 완료 후 게시글 상세 페이지로 이동
     } catch (error) {
-      alert('모임 일정 등록 실패!')
+      alert(isEdit ? '모임 일정 수정 실패!' : '모임 일정 등록 실패!')
       console.error('Error:', error)
     }
   }
@@ -191,7 +239,7 @@ function Events() {
             size="large"
             sx={{ mt: 2, backgroundColor: 'black' }}
           >
-            작성하기
+            {isEdit ? '수정하기' : '작성하기'}
           </Button>
         </form>
       </Box>
