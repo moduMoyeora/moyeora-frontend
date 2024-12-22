@@ -217,9 +217,10 @@ export const handlers = [
           message: '게시물 조회 성공',
           data: {
             board_name: '보드 이름',
-            title: 'string',
-            author: 'string',
-            content: 'string',
+            title: '제목',
+            author: '작성자',
+            content:
+              'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet.',
             created_at: '2024-01-02',
           },
         })
@@ -322,7 +323,7 @@ export const handlers = [
                 id: 10,
                 post_id: 1,
                 member_id: 1,
-                content: '댓글 내용2',
+                content: '댓글 내용ㅇ빈다',
                 created_at: '2024-12-21T10:22:08.000Z',
                 updated_at: '2024-12-21T10:22:08.000Z',
                 nickname: '차수빈',
@@ -351,6 +352,36 @@ export const handlers = [
           status: 200,
         }
       )
+    }
+  ),
+  http.post(
+    'https://dev-moyeora.glitch.me/boards/:boardId/posts/:postId/comments',
+    async ({ request }) => {
+      // URL에서 :boardId와 :postId를 추출
+      const url = new URL(request.url)
+      const boardId = url.pathname.split('/')[2] // :boardId
+      const postId = url.pathname.split('/')[4] // :postId
+      // 요청 본문에서 content를 추출
+      const { content } = await request.json()
+      console.log('post id', postId)
+      // 실제 DB와 상호작용하는 부분은 생략되고, 이 부분에서 응답을 반환합니다.
+      // 정상적으로 댓글이 등록되었다고 가정하고, 응답을 구성합니다.
+      const responseBody = {
+        id: 17, // 실제로는 서버에서 생성된 댓글 ID
+        post_id: Number(postId), // 요청 받은 postId
+        member_id: 3, // 실제 회원 ID (여기선 임시로 4로 설정)
+        content: content, // 댓글 내용
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+
+      // HttpResponse 반환
+      return new HttpResponse(JSON.stringify(responseBody), {
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+      })
     }
   ),
   http.delete(

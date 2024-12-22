@@ -6,9 +6,23 @@ export const getCommentById = async (commentId: string) => {
   const response = await client.get(`${COMMENT_API}/${commentId}`)
   return response
 }
-export const postCommentById = async (data: string) => {
-  const response = await client.post(`${COMMENT_API}`, { data })
-  return response
+export const postCommentById = async (
+  boardId: string,
+  postId: string,
+  content: string
+) => {
+  try {
+    const requestBody = {
+      content: content,
+    }
+    const response = await client.post(
+      `boards/${boardId}/posts/${postId}/comments`,
+      requestBody
+    )
+    return response
+  } catch (error) {
+    console.error('Error:', error)
+  }
 }
 
 export const editCommentById = async (

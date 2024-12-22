@@ -32,6 +32,7 @@ import { FaRegComment, FaRegClock, FaUser } from 'react-icons/fa'
 import { get } from 'http'
 import { updateUser } from '../api/auth.api'
 import { set } from 'react-hook-form'
+import { resolveTimeViewsResponse } from '@mui/x-date-pickers/internals'
 const CommentSection = styled(Paper)(({ theme }) => ({
   padding: '2rem',
   marginTop: 'auto', // Push comments to bottom
@@ -48,17 +49,14 @@ interface Comment {
   content: string
   createdAt: string
   updateAt: string
-  email: string
 }
 
 export default function Comment() {
   const params = useParams<{ id: string; boardId: string }>()
   const postId = params.id
   const boardId = params.boardId
-  console.log(postId, boardId)
-
   const { user_id } = useAuthStore()
-  const [newComment, setNewComment] = useState('')
+  const [newComment, setNewComment] = useState<string>('')
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
@@ -69,30 +67,28 @@ export default function Comment() {
       content: '',
       createdAt: '',
       updateAt: '',
-      email: '',
     },
   ])
-
-  useEffect(() => {
-    const getComments = async () => {
-      try {
-        setLoading(true)
-        if (boardId === undefined || postId === undefined) {
-          return new Error('게시판 ID와 게시글 ID가 필요합니다.')
-        }
-        const commentsResponse = await getCommentsByPostId(boardId, postId)
-        if (commentsResponse.status === 200) {
-          const getComments = commentsResponse.data.data.comments
-          setComments(getComments)
-        } else {
-          console.log('Error fetching comments:', commentsResponse.status)
-        }
-      } catch (error) {
-        console.error('Error fetching comments:', error)
-      } finally {
-        setLoading(false)
+  const getComments = async () => {
+    try {
+      setLoading(true)
+      if (boardId === undefined || postId === undefined) {
+        return new Error('게시판 ID와 게시글 ID가 필요합니다.')
       }
+      const commentsResponse = await getCommentsByPostId(boardId, postId)
+      if (commentsResponse.status === 200) {
+        const getComments = commentsResponse.data.data.comments
+        setComments(getComments)
+      } else {
+        console.log('Error fetching comments:', commentsResponse.status)
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error)
+    } finally {
+      setLoading(false)
     }
+  }
+  useEffect(() => {
     getComments()
   }, [boardId, postId]) // 페이지 변경 시 데이터 로드
   const commentsPerPage = 5
@@ -114,18 +110,18 @@ export default function Comment() {
   ) => {
     setPage(value)
   }
-  const handleCommentSubmit = () => {
-    if (newComment.trim()) {
-      const comment = {
-        id: comments.length + 1, //commentId,
-        nickname: 'Guest User', //userName
-        content: newComment.trim(),
-        createdAt: '2024-01-02',
-        updateAt: Date.now(),
-        email: '',
+  const handleCommentSubmit = async () => {
+    const response = await postCommentById(boardId, postId, newComment)
+    if (response) {
+      if (response.status === 200 || response.status === 201) {
+        console.log('댓글 추가 완료')
+        setNewComment('')
+        getComments()
+      } else {
+        console.log('Error posting comment:', response)
       }
-      // setComments([...comments, comment])
-      setNewComment('')
+    } else {
+      console.log('Error posting comment:', response)
     }
   }
 
