@@ -75,10 +75,12 @@ function Events() {
             time: eventDateTime,
           })
         }
-      } catch (error) {
-        console.error('Error:', error)
-        alert('모임 일정을 불러오는데 실패했습니다.')
-        navigate(`/boards/${boardId}/posts/${id}`)
+      } catch (error: any) {
+        if (error.response?.status === 500) {
+          console.error('Server Error:', error)
+          alert('서버 오류가 발생했습니다.')
+          navigate(`/boards/${boardId}/posts/${id}`)
+        }
       }
     }
 
