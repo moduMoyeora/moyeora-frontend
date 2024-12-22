@@ -48,7 +48,11 @@ const AuthorTimeBox = styled(Box)(({ theme }) => ({
 }))
 
 const Post: React.FC = () => {
-  const { id, boardId, eventId} = useParams<{ id: string; boardId: string; eventId: string; }>()
+  const { id, boardId, eventId } = useParams<{
+    id: string
+    boardId: string
+    eventId: string
+  }>()
   const [postData, setPostData] = useState<PostData | null>(null)
   const [error, setError] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //드롭다운 메뉴의 위치와 표시 여부를 제어
@@ -56,9 +60,6 @@ const Post: React.FC = () => {
   const navigate = useNavigate()
   const client = createClient()
   const currentUserId = useAuthStore((state) => state.user_id) //현재 로그인한 사용자 ID
-
-  const location = useLocation();
-  const eventIdFromLocation = location.state?.eventId;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -73,12 +74,11 @@ const Post: React.FC = () => {
   }
   const handleDelete = async () => {
     try {
+      
       await client.delete(`/boards/${boardId}/posts/${id}`)
-      if(eventIdFromLocation){ //이전 페이지에서 받은 eventId가 있으면
-        DeleteEvent(); // 모임 일정 삭제
-        alert('게시글과 모임 일정이 삭제되었습니다.')
-      }
+      alert('게시글이 삭제되었습니다.')
       navigate('/')
+
     } catch (error) {
       console.error('Error:', error)
       alert('게시글 삭제에 실패했습니다.')
@@ -86,14 +86,16 @@ const Post: React.FC = () => {
     handleClose() // 메뉴 닫기
   }
 
-  const EditEvent = () => { // 모임 일정 수정
-    handleClose();
-    navigate(`/boards/${boardId}/posts/${id}/events/${eventIdFromLocation}/edit`);
+  const EditEvent = () => {
+    // 모임 일정 수정
+    handleClose()
+    navigate(`/boards/${boardId}/posts/${id}/events/edit`)
   }
 
-  const DeleteEvent = async () => { // 모임 일정 삭제
+  const DeleteEvent = async () => {
+    // 모임 일정 삭제
     try {
-      await client.delete(`/boards/${boardId}/posts/${id}/events/${eventIdFromLocation}`)
+      await client.delete(`/boards/${boardId}/posts/${id}/events`)
       alert('모임 일정이 삭제되었습니다.')
     } catch (error) {
       console.error('Error:', error)
@@ -204,7 +206,7 @@ const Post: React.FC = () => {
               >
                 <MenuItem onClick={handleEdit}>수정하기</MenuItem>
                 <MenuItem onClick={handleDelete}>삭제하기</MenuItem>
-                <MenuItem onClick={EditEvent}>일정 수정하기</MenuItem>
+                <MenuItem onClick={EditEvent}>이벤트 수정</MenuItem>
               </Menu>
             </Box>
           )}

@@ -35,10 +35,9 @@ interface SubmitDataType {
 function Events() {
   const [isEdit, setIsEdit] = useState(false)
   const [initialData, setInitialData] = useState<eventData | null>(null)
-  const { boardId, id, eventId } = useParams<{
+  const { boardId, id } = useParams<{
     boardId: string
     id: string
-    eventId: string
   }>()
   const client = createClient()
   const navigate = useNavigate()
@@ -55,34 +54,36 @@ function Events() {
     },
   })
 
-  // URL에서 이벤트 ID를 확인하여 수정 모드인지 판단
   useEffect(() => {
     const fetchEventData = async () => {
-      if (eventId) {
-        // URL에 id가 있으면 수정 모드
-        try {
-          const response = await client.get(
-            `/boards/${boardId}/posts/${id}/events/${eventId}`
-          )
+      try {
+        // 먼저 이벤트 데이터가 존재하는지 확인
+        const response = await client.get(
+          `/boards/${boardId}/posts/${id}/events`
+        )
+
+        // 데이터가 존재하면 수정 모드로 전환
+        if (response.data && Object.keys(response.data).length > 0) {
           setInitialData(response.data)
           setIsEdit(true)
 
+          const eventDateTime = dayjs(response.data.event_time)
           // 폼 초기화
           reset({
             location: response.data.location,
-            date: dayjs(response.data.event_time),
-            time: dayjs(response.data.event_time),
+            date: eventDateTime.startOf('day'),
+            time: eventDateTime,
           })
-        } catch (error) {
-          console.error('Error:', error)
-          alert('모임 일정을 불러오는데 실패했습니다.')
-          navigate(`/boards/${boardId}/posts/${id}`) // 오류 시 게시글 페이지로 이동
         }
+      } catch (error) {
+        console.error('Error:', error)
+        alert('모임 일정을 불러오는데 실패했습니다.')
+        navigate(`/boards/${boardId}/posts/${id}`)
       }
     }
 
     fetchEventData()
-  }, [id, boardId, eventId, reset])
+  }, [id, boardId, reset])
 
   const onSubmit = async (data: FormInputs) => {
     try {
@@ -99,12 +100,8 @@ function Events() {
       }
       if (isEdit) {
         // 수정 요청
-        await client.put(
-          `/boards/${boardId}/posts/${id}/events/${eventId}`,
-          submitData
-        )
+        await client.put(`/boards/${boardId}/posts/${id}/events`, submitData)
         alert('모임 일정이 수정되었습니다!')
-        navigate(`/boards/${boardId}/posts/${id}`) //게시글 상세 페이지로 이동
       } else {
         // 등록 요청
         console.log(submitData)
@@ -115,10 +112,7 @@ function Events() {
         alert('모임 일정이 등록되었습니다!')
         console.log('eventId:' + response.data.id)
 
-        // 게시글 페이지로 이동할 때 state로 eventId 전달
-        navigate(`/boards/${boardId}/posts/${id}`, {
-          state: { eventId: response.data.id },
-        })
+        navigate(`/boards/${boardId}/posts/${id}`) //게시글 상세 페이지로 이동
       }
     } catch (error) {
       alert(isEdit ? '모임 일정 수정 실패!' : '모임 일정 등록 실패!')
