@@ -90,6 +90,7 @@ function Events() {
         setIsEdit(true);
         
         const eventDateTime = dayjs(eventData.event_time);
+        console.log(eventDateTime);
         reset({
           location: eventData.location,
           date: eventDateTime,
@@ -116,7 +117,7 @@ function Events() {
         ?.hour(data.time?.hour() || 0)
         ?.minute(data.time?.minute() || 0)
         ?.second(0)
-        ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
+        ?.format('YYYY-MM-DD HH:mm:ss')
 
       // 백엔드로 보낼 데이터 형식
       const submitData: SubmitDataType = {
