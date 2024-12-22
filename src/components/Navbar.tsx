@@ -6,10 +6,10 @@ import { useAuthStore } from '../store/authStore'
 import { useState } from 'react'
 
 export default function NavBar() {
-  const { boardId } = useParams<{boardId: string}>(); 
-  const categories = [
-    { name: '글쓰기', path: `/boards/${boardId}/posts` }
-  ]
+  const { boardId } = useParams<{ boardId: string }>()
+  // const categories = [
+  //   { name: '글쓰기', path: `/boards/${boardId}/posts` }
+  // ]
   const { isLoggedIn, storeLogout } = useAuthStore()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -27,7 +27,7 @@ export default function NavBar() {
         ☰
       </button>
 
-      <div className={`navbar-Menus ${isOpen ? 'active' : ''}`}>
+      {/* <div className={`navbar-Menus ${isOpen ? 'active' : ''}`}>
         {categories.map(({ name, path }, idx) => (
           <Link
             className="navbar-menu"
@@ -38,7 +38,7 @@ export default function NavBar() {
             {name}
           </Link>
         ))}
-      </div>
+      </div> */}
 
       <div className={`navbar-right ${isOpen ? 'active' : ''}`}>
         {isLoggedIn ? (
