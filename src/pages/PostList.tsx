@@ -68,7 +68,7 @@ const PostList: React.FC = () => {
     setError(null)
     try {
       const response = await httpClient.get(`/boards/${boardId}/posts`, {
-        params: { limit: 3, page: currentPage },
+        params: { limit: 10, page: currentPage },
       })
       const postsData = response.data.data.posts || []
       const pagination = response.data.data.pagination || {}
@@ -123,21 +123,12 @@ const PostList: React.FC = () => {
           variant="contained"
           color="primary"
           onClick={() => navigate(`/boards/${boardId}/posts`)}
-          sx={{ height: '40px' }} // 버튼 높이 조절
+          sx={{ height: '40px' }}
         >
           글작성
         </Button>
       </Box>
-      <Paper
-        sx={{
-          padding: 2,
-          minHeight: '50vh',
-          minWidth: '50vw',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
+      <Paper sx={{ padding: 2 }}>
         {/* 게시글 리스트 */}
         <Box p={2}>
           <Grid container spacing={3} sx={{ fontWeight: 'bold' }}>
@@ -146,7 +137,6 @@ const PostList: React.FC = () => {
               xs={6}
               sx={{
                 padding: '10px',
-                minHeight: '60px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -159,7 +149,6 @@ const PostList: React.FC = () => {
               xs={3}
               sx={{
                 padding: '10px',
-                minHeight: '60px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -172,7 +161,6 @@ const PostList: React.FC = () => {
               xs={3}
               sx={{
                 padding: '10px',
-                minHeight: '60px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
