@@ -172,7 +172,11 @@ export default function MyPage() {
                     성별
                   </Typography>
                   <Typography variant="body1" className="mypage-font-style-2">
-                    {user?.gender || ''}
+                    {user?.gender === 'M'
+                      ? '남자'
+                      : user?.gender === 'F'
+                        ? '여자'
+                        : ''}
                   </Typography>
                 </Box>
 
@@ -255,8 +259,8 @@ export default function MyPage() {
                 name="gender"
                 onChange={handleDataChange}
               >
-                <MenuItem value={'남자'}>남자</MenuItem>
-                <MenuItem value={'여자'}>여자</MenuItem>
+                <MenuItem value={'M'}>남자</MenuItem>
+                <MenuItem value={'F'}>여자</MenuItem>
               </Select>
             </div>
             <div className="form-content">
