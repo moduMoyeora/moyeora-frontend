@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { httpClient } from '../api/http' // 경로를 맞춰서 가져옵니다.
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   Pagination,
   CircularProgress,
   Alert,
+  Button,
 } from '@mui/material'
 
 interface Board {
@@ -31,6 +32,7 @@ const PostList: React.FC = () => {
   const [boardTitle, setBoardTitle] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   // 게시판 제목 가져오기
   useEffect(() => {
@@ -109,6 +111,13 @@ const PostList: React.FC = () => {
       <Typography variant="h4" gutterBottom textAlign="center">
         {boardTitle || '게시판'} {/* 제목 렌더링 */}
       </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigate(`/boards/${boardId}/posts`)}
+      >
+        글작성
+      </Button>
       <Paper
         sx={{
           padding: 2,
