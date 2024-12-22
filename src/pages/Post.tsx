@@ -30,6 +30,10 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   maxWidth: '800px', // 또는 원하는 최대 너비
   margin: '0 auto', // 가운데 정렬
   padding: theme.spacing(3),
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '100vh',
+  marginTop: '10%',
 }))
 
 const HeaderBox = styled(Box)(({ theme }) => ({
@@ -121,7 +125,7 @@ const Post: React.FC = () => {
   const isAuthor = currentUserId === member_id // 현재 로그인한 사용자와 글의 작성자가 같은지 확인
 
   return (
-    <ContentContainer sx={{ marginTop: '60px' }}>
+    <ContentContainer>
       <HeaderBox>
         <Typography
           variant="subtitle1"
@@ -191,7 +195,9 @@ const Post: React.FC = () => {
           {parse(content)}
         </Typography>
       </Box>
-      <Comment />
+      <Box>
+        <Comment />
+      </Box>
     </ContentContainer>
   )
 }

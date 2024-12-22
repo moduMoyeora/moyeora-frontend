@@ -34,7 +34,7 @@ import { updateUser } from '../api/auth.api'
 import { set } from 'react-hook-form'
 const CommentSection = styled(Paper)(({ theme }) => ({
   padding: '2rem',
-  marginBottom: '2rem',
+  marginTop: 'auto', // Push comments to bottom
   width: '100%',
   backgroundColor: '#fafafa',
 }))
@@ -84,10 +84,6 @@ export default function Comment() {
         if (commentsResponse.status === 200) {
           const getComments = commentsResponse.data.data.comments
           setComments(getComments)
-
-          // const setSliceComments = comments.slice(startIndex, endIndex)
-          // setSlicedComments(setSliceComments)
-          //const currentComments = comments.slice(startIndex, endIndex)
         } else {
           console.log('Error fetching comments:', commentsResponse.status)
         }
@@ -99,8 +95,8 @@ export default function Comment() {
     }
     getComments()
   }, [boardId, postId]) // 페이지 변경 시 데이터 로드
-  const commentsPerPage = 3
-  const pages = Math.ceil(comments.length / 3)
+  const commentsPerPage = 5
+  const pages = Math.ceil(comments.length / commentsPerPage)
   const startIndex = (page - 1) * commentsPerPage
   const endIndex = startIndex + commentsPerPage
   const currentComments = comments.slice(startIndex, endIndex)
