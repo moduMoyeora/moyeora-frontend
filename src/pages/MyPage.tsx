@@ -122,6 +122,7 @@ export default function MyPage() {
             value: '저장되었습니다.',
           })
           setUser(response.data)
+          getUserInformation()
         } else {
           setAlertOption({
             severity: 'error',
