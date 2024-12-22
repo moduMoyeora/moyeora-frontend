@@ -13,7 +13,7 @@ interface Post {
   title: string
 }
 
-const API_BASE_URL = 'https://dev-moyeora.glitch.me'
+const API_BASE_URL = 'https://dev-moyeora.glitch.me' // 경로 끝에 '/' 없어도 괜찮음
 
 const MainPage: React.FC = () => {
   const [boardItems, setBoardItems] = useState<BoardItem[]>([]) // 게시판 목록 상태
