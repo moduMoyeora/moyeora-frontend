@@ -27,6 +27,11 @@ interface FormInputs {
   time: Dayjs | null
 }
 
+interface SubmitDataType {
+  location: string;
+  time: string;
+}
+
 function Events() {
   const [isEdit, setIsEdit] = useState(false)
   const [initialData, setInitialData] = useState<eventData | null>(null)
@@ -81,16 +86,16 @@ function Events() {
 
   const onSubmit = async (data: FormInputs) => {
     try {
-      const combinedDateTime = data.date
+      const combinedDateTime= data.date
         ?.hour(data.time?.hour() || 0)
         ?.minute(data.time?.minute() || 0)
         ?.second(0)
-        ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]')
+        ?.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
       // 백엔드로 보낼 데이터 형식
-      const submitData = {
+      const submitData: SubmitDataType = {
         location: data.location,
-        time: combinedDateTime,
+        time: combinedDateTime || ' '
       }
       if (isEdit) {
         // 수정 요청

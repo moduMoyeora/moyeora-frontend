@@ -1,4 +1,4 @@
-type Gender = '남자' | '여자'
+type Gender = 'M' | 'F'
 export interface User {
   nickname: string
   name: string | null

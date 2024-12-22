@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Post from './pages/Post'
-import CreatePost from './pages/createPost'
+import Comment from './components/Comment'
 import EditPost from './pages/EditPost'
 import Events from './pages/Events'
 import Login from './pages/Login'
@@ -11,8 +11,7 @@ import React from 'react'
 import Signup from './pages/Signup'
 import MainPage from './pages/MainPage'
 import PostList from './pages/PostList'
-import CheckEvent from './pages/CheckEvent'
-
+import CreatePost from './pages/createPost'
 const Router: React.FC = () => {
   return (
     <BrowserRouter>

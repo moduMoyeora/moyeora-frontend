@@ -11,19 +11,18 @@ export interface Inputs {
 
 function CreatePost() {
   const { boardId } = useParams<{ boardId: string }>();
-  const boardIdNumber = Number(boardId);
   const navigate = useNavigate();
   const client = createClient();
 
   const handleSubmit = async (data: Inputs) => {
     try {
       console.log("Submitting data:", data);
-      const response = await client.post(`/boards/${boardIdNumber}/posts`, data);
+      const response = await client.post(`/boards/${boardId}/posts`, data);
       console.log("Server response:", response.data);
       
       // 서버 응답에서 생성된 게시글의 ID를 받아옴
       const newPostId = response.data.id;
-      navigate(`/boards/${boardIdNumber}/posts/${newPostId}/events`); // 이벤트 작성 페이지로 이동
+      navigate(`/boards/${boardId}/posts/${newPostId}/events`); // 이벤트 작성 페이지로 이동
     } catch (error) {
       console.log("Error: ",error);
     }
