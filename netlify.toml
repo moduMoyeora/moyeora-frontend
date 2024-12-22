@@ -1,5 +1,0 @@
-[[redirects]]
-  from = "/api/*"
-  to = "https://dev-moyeora.glitch.me/api/:splat"
-  status = 200
-  force = true

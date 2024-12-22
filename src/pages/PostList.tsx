@@ -37,10 +37,7 @@ const PostList: React.FC = () => {
     const fetchBoardTitle = async () => {
       try {
         setIsLoading(true)
-        const response = await httpClient.get(
-          `/boards`
-          // `/boards` -- 프록시 경로
-        )
+        const response = await httpClient.get(`/boards`)
         const boards = response.data
 
         // boardId에 해당하는 제목 찾기
@@ -68,14 +65,10 @@ const PostList: React.FC = () => {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await httpClient.get(
-        `/boards/${boardId}/posts`,
-        // `/boards/${boardId}/posts`, 프록시 경로
-        {
-          params: { page: currentPage },
-        }
-      )
-      if (response.status === 204 || !response.data.posts) {
+      const response = await httpClient.get(`/boards/${boardId}/posts`, {
+        params: { limit: 3, page: currentPage },
+      })
+      if (response.status === 204 || !response.data.data.posts) {
         setPosts([]) // 데이터가 없을 경우 빈 배열 설정
         setTotalPages(0)
       } else {
