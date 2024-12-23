@@ -109,12 +109,12 @@ const MainPage: React.FC = () => {
                 overflow: 'hidden', // 내용 넘침 방지
               }}
             >
-              <Typography variant="h6">
+              <Typography variant="h6" sx={{ display: 'inline-block' }}>
                 <Link
                   to={`/boards/${item.id}`}
                   style={{
                     textDecoration: 'none',
-                    color: '#000000', // 검정색
+                    color: '#000000',
                     cursor: 'pointer',
                   }}
                 >
@@ -123,32 +123,43 @@ const MainPage: React.FC = () => {
               </Typography>
 
               {/* 게시글 미리 보기 */}
-              {postsForBoards[item.id] && postsForBoards[item.id].length > 0 ? (
-                <Box
-                  sx={{ marginTop: 1, maxHeight: '120px', overflowY: 'auto' }}
-                >
-                  {postsForBoards[item.id].map((post) => (
-                    <Box key={post.id}>
-                      <Link
-                        to={`/boards/${item.id}/posts/${post.id}`}
-                        style={{
-                          textDecoration: 'none',
-                          color: 'inherit',
-                          cursor: 'pointer',
+              <Box sx={{ marginTop: 1 }}>
+                {postsForBoards[item.id] &&
+                postsForBoards[item.id].length > 0 ? (
+                  postsForBoards[item.id].map((post) => (
+                    <Link
+                      to={`/boards/${item.id}/posts/${post.id}`}
+                      key={post.id}
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <Grid
+                        container
+                        spacing={3}
+                        sx={{
+                          py: 1,
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid #ddd',
+                          width: '100%',
                         }}
                       >
-                        <Typography variant="body2" noWrap>
-                          {post.title}
-                        </Typography>
-                      </Link>
-                    </Box>
-                  ))}
-                </Box>
-              ) : (
-                <Typography variant="body2" color="textSecondary">
-                  아직 게시글이 없습니다.
-                </Typography>
-              )}
+                        <Grid item xs={12}>
+                          <Typography variant="body2" noWrap>
+                            {post.title}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Link>
+                  ))
+                ) : (
+                  <Typography variant="body2" color="textSecondary">
+                    아직 게시글이 없습니다.
+                  </Typography>
+                )}
+              </Box>
             </Paper>
           </Grid>
         ))}
