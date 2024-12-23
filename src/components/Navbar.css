@@ -82,7 +82,9 @@
   .hamburger {
     display: block;
   }
-
+  .navbar {
+    height: auto;
+  }
   .navbar-Menus,
   .navbar-right {
     display: none;
