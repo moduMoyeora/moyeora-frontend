@@ -75,6 +75,10 @@ export default function Comment({ postWriter }: props) {
     content: '',
   })
   const [comments, setComments] = useState([] as Comment[])
+  const [buttonState, setButtonState] = useState({
+    text: '수락',
+    isAccepted: false
+  });
   const getComments = async () => {
     try {
       setLoading(true)
@@ -183,6 +187,10 @@ export default function Comment({ postWriter }: props) {
         { commentId: comment_id }
       )
       if (response.status === 200) {
+        setButtonState({
+          text: '수락 완료',
+          isAccepted: true
+        });
         alert('이메일 전송 완료')
       }
     } catch (error) {
@@ -263,19 +271,21 @@ export default function Comment({ postWriter }: props) {
                   ) : null}
                   {user_id === postWriter && (
                     <Button
-                      type="submit"
-                      variant="contained"
-                      size="small"
-                      onClick={() => sendEmail(String(comment.id))}
-                      sx={{
-                        backgroundColor: 'black',
-                        '&:hover': {
-                          backgroundColor: '#8C8C8C',
-                        },
-                      }}
-                    >
-                      수락
-                    </Button>
+                    type="submit"
+                    variant="contained"
+                    size="small"
+                    onClick={() => sendEmail(String(comment.id))}
+                    sx={{
+                      backgroundColor: buttonState.isAccepted ? '#8C8C8C' : 'black',
+                      '&:hover': {
+                        backgroundColor: buttonState.isAccepted ? '#8C8C8C' : '#8C8C8C',
+                      },
+                    }}
+                    disabled={buttonState.isAccepted}
+                  >
+                    {buttonState.text}
+                  </Button>
+                  
                   )}
                 </ListItem>
                 <Divider variant="inset" component="li" />
