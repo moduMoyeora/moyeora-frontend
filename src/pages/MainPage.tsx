@@ -121,14 +121,7 @@ const MainPage: React.FC = () => {
                   {item.name}
                 </Link>
               </Typography>
-              {/* 검정색 구분선 추가 */}
-              <Box
-                sx={{
-                  // margin: '16px 0', // 위아래 간격
-                  height: '1px', // 구분선 두께
-                  backgroundColor: '#000000', // 검정색
-                }}
-              />
+
               {/* 게시글 미리 보기 */}
               {postsForBoards[item.id] && postsForBoards[item.id].length > 0 ? (
                 <Box
