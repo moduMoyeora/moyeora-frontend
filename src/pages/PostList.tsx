@@ -88,10 +88,10 @@ const PostList: React.FC = () => {
     setError(null)
 
     try {
-      console.log('요청 파라미터:', { limit: 10, page: currentPage }) // 페이지와 limit 값 확인
+      console.log('요청 파라미터:', { limit: 5, page: currentPage }) // 페이지와 limit 값 확인
 
       const response = await httpClient.get(`/boards/${boardId}/posts`, {
-        params: { limit: 10, page: currentPage },
+        params: { limit: 5, page: currentPage },
       })
 
       console.log('API 응답:', response.data)
