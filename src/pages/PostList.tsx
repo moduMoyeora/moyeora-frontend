@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { httpClient } from '../api/http'
 import {
   Box,
@@ -34,6 +34,17 @@ const PostList: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
+  const location = useLocation() // useLocation 훅을 사용해 location 가져오기
+
+  // 페이지네이션 상태를 URL 쿼리 파라미터로 관리
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search)
+    const page = queryParams.get('page')
+      ? parseInt(queryParams.get('page')!, 10)
+      : 1
+    setCurrentPage(page)
+  }, [location])
+
   // 게시판 제목 가져오기
   useEffect(() => {
     const fetchBoardTitle = async () => {
@@ -58,6 +69,14 @@ const PostList: React.FC = () => {
 
     fetchBoardTitle()
   }, [boardId])
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page)
+    navigate(`${location.pathname}?page=${page}`)
+  }
 
   useEffect(() => {
     fetchPosts()
@@ -94,14 +113,6 @@ const PostList: React.FC = () => {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    setCurrentPage(page)
-    setPosts([]) // 이전 데이터 초기화
   }
 
   if (isLoading)
@@ -191,9 +202,9 @@ const PostList: React.FC = () => {
                 >
                   <Paper
                     sx={{
-                      py: 1, // 여기에 padding을 추가해서 hover 효과가 글자 뿐 아니라 박스 전체로 확장되도록
+                      py: 1,
                       '&:hover': { backgroundColor: '#f5f5f5' },
-                      borderBottom: '1px solid #ddd',
+                      // borderBottom: '1px solid #ddd',
                     }}
                   >
                     <Grid container spacing={3}>
