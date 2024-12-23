@@ -87,10 +87,18 @@ const MainPage: React.FC = () => {
   )
 
   return (
-    <Box sx={{ maxWidth: '1200px', margin: '0 auto', padding: 2 }}>
+    <Box
+      sx={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: 2,
+        paddingTop: { xs: 8, sm: 10 }, // 상단 여백 추가 (반응형)
+      }}
+    >
+      {' '}
       <Grid container spacing={2}>
         {currentBoardItems.map((item) => (
-          <Grid item xs={12} md={6} key={item.id}>
+          <Grid item xs={12} sm={6} key={item.id}>
             <Paper
               sx={{
                 padding: 2,
@@ -98,6 +106,7 @@ const MainPage: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                overflow: 'hidden', // 내용 넘침 방지
               }}
             >
               <Typography variant="h6">
@@ -105,15 +114,18 @@ const MainPage: React.FC = () => {
                   to={`/boards/${item.id}`}
                   style={{
                     textDecoration: 'none',
-                    color: 'inherit',
+                    color: 'black',
                     cursor: 'pointer',
                   }}
                 >
                   {item.name}
                 </Link>
               </Typography>
+              {/* 게시글 미리 보기 */}
               {postsForBoards[item.id] && postsForBoards[item.id].length > 0 ? (
-                <Box>
+                <Box
+                  sx={{ marginTop: 1, maxHeight: '120px', overflowY: 'auto' }}
+                >
                   {postsForBoards[item.id].map((post) => (
                     <Box key={post.id}>
                       <Link
@@ -124,7 +136,9 @@ const MainPage: React.FC = () => {
                           cursor: 'pointer',
                         }}
                       >
-                        <Typography variant="body2">{post.title}</Typography>
+                        <Typography variant="body2" noWrap>
+                          {post.title}
+                        </Typography>
                       </Link>
                     </Box>
                   ))}
@@ -138,7 +152,6 @@ const MainPage: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-
       <Box sx={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
         <Pagination
           count={Math.ceil(boardItems.length / itemsPerPage)}
