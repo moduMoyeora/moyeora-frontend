@@ -34,6 +34,15 @@ const PostList: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
+  // 페이지네이션 상태를 URL 쿼리 파라미터로 관리
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search)
+    const page = queryParams.get('page')
+      ? parseInt(queryParams.get('page')!, 10)
+      : 1
+    setCurrentPage(page)
+  }, [location])
+
   // 게시판 제목 가져오기
   useEffect(() => {
     const fetchBoardTitle = async () => {
@@ -64,6 +73,7 @@ const PostList: React.FC = () => {
     page: number
   ) => {
     setCurrentPage(page)
+    navigate(`${location.pathname}?page=${page}`)
   }
 
   useEffect(() => {
