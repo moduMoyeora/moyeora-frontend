@@ -23,6 +23,7 @@ import {
   Typography,
   selectClasses,
 } from '@mui/material'
+import axios from 'axios'
 import { FaEdit, FaUser } from 'react-icons/fa'
 import { FaMapLocationDot, FaRegMessage } from 'react-icons/fa6'
 import { getUser, updateUser } from '../api/auth.api'
@@ -71,17 +72,23 @@ export default function MyPage() {
     if (user_id) {
       try {
         const response = await getUser(user_id)
+        console.log('getUser response:', response)
+
         if (response.status === 200) {
           setUser(response.data)
-        } else if (response.status === 401) {
-          console.log('Unauthorized access detected. Logging out.')
-          useAuthStore.getState().storeLogout()
-          navigate('/login')
         } else {
           console.log('User information fetch failed:', response)
         }
       } catch (error) {
-        console.error('Error fetching user information:', error)
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            console.log('Unauthorized access detected. Logging out.')
+            useAuthStore.getState().storeLogout()
+            navigate('/login')
+          }
+        } else {
+          console.error('Error fetching user:', error)
+        }
       }
     }
   }

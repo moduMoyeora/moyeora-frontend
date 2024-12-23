@@ -18,11 +18,15 @@ export const handlers = [
 
   http.get('https://dev-moyeora.glitch.me/users/profile/:id', ({ params }) => {
     const { id } = params
-    return Response.json({
-      id: params.id,
-      nickname: 'testName',
-    })
+    return new HttpResponse(
+      JSON.stringify({
+        id: params.id,
+        nickname: 'testName',
+      }),
+      { status: 401 }
+    )
   }),
+
   http.get('https://dev-moyeora.glitch.me/users/check', ({ request }) => {
     const url = new URL(request.url)
     const field = url.searchParams.get('field')
