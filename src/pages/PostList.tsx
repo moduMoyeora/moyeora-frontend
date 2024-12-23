@@ -77,9 +77,13 @@ const PostList: React.FC = () => {
 
       // 총 페이지 수 및 게시글 설정
       setPosts(postsData)
-      setTotalPages(
-        pagination.totalPages || Math.ceil(pagination.totalCount / 10)
-      )
+
+      // 게시글이 없으면 totalPages를 1로 설정
+      const totalPosts = pagination.totalCount || 0
+      const calculatedTotalPages =
+        totalPosts === 0 ? 1 : Math.ceil(totalPosts / 10)
+
+      setTotalPages(calculatedTotalPages)
     } catch (err: any) {
       if (err.response?.status === 401) {
         console.log('토큰 만료: 재인증이 필요합니다.')
@@ -185,25 +189,25 @@ const PostList: React.FC = () => {
                   key={post.id}
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  <Grid
-                    container
-                    spacing={3}
+                  <Paper
                     sx={{
-                      py: 1,
+                      py: 1, // 여기에 padding을 추가해서 hover 효과가 글자 뿐 아니라 박스 전체로 확장되도록
                       '&:hover': { backgroundColor: '#f5f5f5' },
                       borderBottom: '1px solid #ddd',
                     }}
                   >
-                    <Grid item xs={6}>
-                      <Typography noWrap>{post.title}</Typography>
+                    <Grid container spacing={3}>
+                      <Grid item xs={6}>
+                        <Typography noWrap>{post.title}</Typography>
+                      </Grid>
+                      <Grid item xs={3} textAlign="center">
+                        {post.nickname}
+                      </Grid>
+                      <Grid item xs={3} textAlign="center">
+                        {new Date(post.created_at).toLocaleDateString()}
+                      </Grid>
                     </Grid>
-                    <Grid item xs={3} textAlign="center">
-                      {post.nickname}
-                    </Grid>
-                    <Grid item xs={3} textAlign="center">
-                      {new Date(post.created_at).toLocaleDateString()}
-                    </Grid>
-                  </Grid>
+                  </Paper>
                 </Link>
               ))
             )}
