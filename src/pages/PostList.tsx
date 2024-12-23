@@ -99,13 +99,13 @@ const PostList: React.FC = () => {
       const postsData = response.data.data?.posts || []
       const pagination = response.data.data?.pagination || {}
 
-      // 총 페이지 수 및 게시글 설정
-      setPosts(postsData)
+      setPosts(postsData) // 총 페이지 수 및 게시글 설정
 
       // 게시글이 없으면 totalPages를 1로 설정
       const totalPosts = pagination.totalCount || 0
-      const calculatedTotalPages =
-        totalPosts === 0 ? 1 : Math.ceil(totalPosts / 10)
+      // const calculatedTotalPages =
+      //   totalPosts === 0 ? 1 : Math.ceil(totalPosts / 10)
+      const calculatedTotalPages = Math.ceil(totalPosts / 10)
 
       // 특정 boardId(1번 게시판)인 경우, 최소 페이지 값 1로 설정
       if (Number(boardId) === 1) {
@@ -124,6 +124,13 @@ const PostList: React.FC = () => {
       setIsLoading(false)
     }
   }
+
+  // 게시글을 페이지에 맞게 잘라서 보여줌 (한 페이지에 10개 게시글)
+  const postsPerPage = 10
+  const currentPosts = posts.slice(
+    (currentPage - 1) * postsPerPage,
+    currentPage * postsPerPage
+  )
 
   if (isLoading)
     return (
@@ -161,51 +168,24 @@ const PostList: React.FC = () => {
       <Paper sx={{ padding: 2 }}>
         <Box p={2}>
           <Grid container spacing={3} sx={{ fontWeight: 'bold' }}>
-            <Grid
-              item
-              xs={6}
-              sx={{
-                padding: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <Grid item xs={6} sx={{ padding: '10px', textAlign: 'center' }}>
               제목
             </Grid>
-            <Grid
-              item
-              xs={3}
-              sx={{
-                padding: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <Grid item xs={3} sx={{ padding: '10px', textAlign: 'center' }}>
               작성자
             </Grid>
-            <Grid
-              item
-              xs={3}
-              sx={{
-                padding: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <Grid item xs={3} sx={{ padding: '10px', textAlign: 'center' }}>
               작성일
             </Grid>
           </Grid>
 
           <Box mt={2}>
-            {posts.length === 0 ? (
+            {currentPosts.length === 0 ? (
               <Typography align="center" color="textSecondary" sx={{ mt: 2 }}>
                 게시글이 없습니다. 게시글을 작성해 보세요!
               </Typography>
             ) : (
-              posts.map((post) => (
+              currentPosts.map((post) => (
                 <Link
                   to={`/boards/${boardId}/posts/${post.id}`}
                   key={post.id}
