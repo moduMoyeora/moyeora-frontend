@@ -14,6 +14,7 @@ import {
 import { styled } from '@mui/system'
 import { PiDotsThreeCircleVerticalThin } from 'react-icons/pi'
 import { useAuthStore } from '../store/authStore'
+import { Link } from 'react-router-dom'
 
 interface PostData {
   data: {
@@ -73,11 +74,9 @@ const Post: React.FC = () => {
   }
   const handleDelete = async () => {
     try {
-      
       await client.delete(`/boards/${boardId}/posts/${id}`)
       alert('게시글이 삭제되었습니다.')
       navigate('/')
-
     } catch (error) {
       console.error('Error:', error)
       alert('게시글 삭제에 실패했습니다.')
@@ -155,7 +154,16 @@ const Post: React.FC = () => {
           color="text.secondary"
           sx={{ marginBottom: 2 }}
         >
-          {board_name}
+          <Link
+            to={`/boards/${boardId}`}
+            style={{
+              textDecoration: 'none',
+              color: 'inherit',
+              cursor: 'pointer',
+            }}
+          >
+            {board_name}
+          </Link>
         </Typography>
         <Typography
           variant="h4"
@@ -220,7 +228,7 @@ const Post: React.FC = () => {
         </Typography>
       </Box>
       <Box>
-        <Comment postWriter={member_id}/>
+        <Comment postWriter={member_id} />
       </Box>
     </ContentContainer>
   )
