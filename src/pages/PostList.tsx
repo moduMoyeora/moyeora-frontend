@@ -77,9 +77,13 @@ const PostList: React.FC = () => {
 
       // 총 페이지 수 및 게시글 설정
       setPosts(postsData)
-      setTotalPages(
-        pagination.totalPages || Math.ceil(pagination.totalCount / 10)
-      )
+
+      // 게시글이 없으면 totalPages를 1로 설정
+      const totalPosts = pagination.totalCount || 0
+      const calculatedTotalPages =
+        totalPosts === 0 ? 1 : Math.ceil(totalPosts / 10)
+
+      setTotalPages(calculatedTotalPages)
     } catch (err: any) {
       if (err.response?.status === 401) {
         console.log('토큰 만료: 재인증이 필요합니다.')
