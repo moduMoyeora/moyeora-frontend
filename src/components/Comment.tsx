@@ -188,7 +188,7 @@ export default function Comment({ postWriter }: props) {
       )
       if (response.status === 200) {
         setButtonState({
-          text: '수락 완료',
+          text: '전송됨',
           isAccepted: true
         });
         alert('이메일 전송 완료')
@@ -269,7 +269,7 @@ export default function Comment({ postWriter }: props) {
                       </Button>
                     </div>
                   ) : null}
-                  {user_id === postWriter && (
+                  {(user_id === postWriter && boardId === "1") && (
                     <Button
                     type="submit"
                     variant="contained"

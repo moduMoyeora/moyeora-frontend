@@ -213,7 +213,9 @@ const Post: React.FC = () => {
               >
                 <MenuItem onClick={handleEdit}>수정하기</MenuItem>
                 <MenuItem onClick={handleDelete}>삭제하기</MenuItem>
-                <MenuItem onClick={EditEvent}>이벤트 수정</MenuItem>
+                {boardId === '1' && (
+                  <MenuItem onClick={EditEvent}>이벤트 수정</MenuItem>
+                )}
               </Menu>
             </Box>
           )}
