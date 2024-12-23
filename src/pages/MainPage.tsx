@@ -51,12 +51,15 @@ const MainPage: React.FC = () => {
             params: { limit: 3 },
           })
           console.log(`Fetched Posts for board ${board.id}:`, response.data) // 각 게시판의 게시물 확인
-          if (response.data && response.data.posts) {
-            postsByBoard[board.id] = response.data.posts
-          }
+
+          const posts = response.data?.data?.posts || []
+          postsByBoard[board.id] = posts
         })
         await Promise.all(promises)
+
+        // 상태 업데이트
         setPostsForBoards(postsByBoard)
+        console.log(`게시판 미리 보기 데이터: `, postsForBoards)
       } catch (err) {
         console.error('게시물 조회 실패:', err)
         setError('게시물을 가져오는 데 실패했습니다.')
@@ -84,10 +87,18 @@ const MainPage: React.FC = () => {
   )
 
   return (
-    <Box sx={{ maxWidth: '1200px', margin: '0 auto', padding: 2 }}>
+    <Box
+      sx={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: 2,
+        paddingTop: { xs: 8, sm: 10 }, // 상단 여백 추가 (반응형)
+      }}
+    >
+      {' '}
       <Grid container spacing={2}>
         {currentBoardItems.map((item) => (
-          <Grid item xs={12} md={6} key={item.id}>
+          <Grid item xs={12} sm={6} key={item.id}>
             <Paper
               sx={{
                 padding: 2,
@@ -95,39 +106,64 @@ const MainPage: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                overflow: 'hidden', // 내용 넘침 방지
               }}
             >
-              <Typography variant="h6">
+              <Typography variant="h6" sx={{ display: 'inline-block' }}>
                 <Link
                   to={`/boards/${item.id}`}
-                  style={{ textDecoration: 'none' }}
+                  style={{
+                    textDecoration: 'none',
+                    color: '#000000',
+                    cursor: 'pointer',
+                  }}
                 >
                   {item.name}
                 </Link>
               </Typography>
-              {postsForBoards[item.id] && postsForBoards[item.id].length > 0 ? (
-                <Box>
-                  {postsForBoards[item.id].map((post) => (
-                    <Box key={post.id}>
-                      <Link
-                        to={`/boards/${item.id}/posts/${post.id}`}
-                        style={{ textDecoration: 'none' }}
+
+              {/* 게시글 미리 보기 */}
+              <Box sx={{ marginTop: 1 }}>
+                {postsForBoards[item.id] &&
+                postsForBoards[item.id].length > 0 ? (
+                  postsForBoards[item.id].map((post) => (
+                    <Link
+                      to={`/boards/${item.id}/posts/${post.id}`}
+                      key={post.id}
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <Paper
+                        sx={{
+                          py: 1, // Padding을 추가하여 hover 효과 범위 확대
+                          '&:hover': { backgroundColor: '#f5f5f5' },
+                          borderBottom: '1px solid #ddd',
+                          width: '100%', // 게시글 전체에 hover 적용
+                        }}
                       >
-                        <Typography variant="body2">{post.title}</Typography>
-                      </Link>
-                    </Box>
-                  ))}
-                </Box>
-              ) : (
-                <Typography variant="body2" color="textSecondary">
-                  아직 게시글이 없습니다.
-                </Typography>
-              )}
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <Typography variant="body2" noWrap>
+                              {post.title}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                    </Link>
+                  ))
+                ) : (
+                  <Typography variant="body2" color="textSecondary">
+                    아직 게시글이 없습니다.
+                  </Typography>
+                )}
+              </Box>
             </Paper>
           </Grid>
         ))}
       </Grid>
-
       <Box sx={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
         <Pagination
           count={Math.ceil(boardItems.length / itemsPerPage)}
