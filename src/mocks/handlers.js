@@ -63,7 +63,7 @@ export const handlers = [
     try {
       const userData = await request.json()
       const { email, password, nickname } = userData
-
+      console.log('password', password)
       // 간단한 유효성 검사
       if (!email || !password || !nickname) {
         return new HttpResponse(
