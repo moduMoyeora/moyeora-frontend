@@ -70,6 +70,7 @@ const PostList: React.FC = () => {
     fetchBoardTitle()
   }, [boardId])
 
+  // 페이지 변경 처리
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number
@@ -87,9 +88,13 @@ const PostList: React.FC = () => {
     setError(null)
 
     try {
+      console.log('요청 파라미터:', { limit: 10, page: currentPage }) // 페이지와 limit 값 확인
+
       const response = await httpClient.get(`/boards/${boardId}/posts`, {
         params: { limit: 10, page: currentPage },
       })
+
+      console.log('API 응답:', response.data)
 
       const postsData = response.data.data?.posts || []
       const pagination = response.data.data?.pagination || {}
@@ -102,7 +107,12 @@ const PostList: React.FC = () => {
       const calculatedTotalPages =
         totalPosts === 0 ? 1 : Math.ceil(totalPosts / 10)
 
-      setTotalPages(calculatedTotalPages)
+      // 특정 boardId(1번 게시판)인 경우, 최소 페이지 값 1로 설정
+      if (Number(boardId) === 1) {
+        setTotalPages(Math.max(1, calculatedTotalPages))
+      } else {
+        setTotalPages(calculatedTotalPages)
+      }
     } catch (err: any) {
       if (err.response?.status === 401) {
         console.log('토큰 만료: 재인증이 필요합니다.')
@@ -147,8 +157,8 @@ const PostList: React.FC = () => {
           글작성
         </Button>
       </Box>
+
       <Paper sx={{ padding: 2 }}>
-        {/* 게시글 리스트 */}
         <Box p={2}>
           <Grid container spacing={3} sx={{ fontWeight: 'bold' }}>
             <Grid
@@ -188,6 +198,7 @@ const PostList: React.FC = () => {
               작성일
             </Grid>
           </Grid>
+
           <Box mt={2}>
             {posts.length === 0 ? (
               <Typography align="center" color="textSecondary" sx={{ mt: 2 }}>
@@ -201,11 +212,7 @@ const PostList: React.FC = () => {
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <Paper
-                    sx={{
-                      py: 1,
-                      '&:hover': { backgroundColor: '#f5f5f5' },
-                      // borderBottom: '1px solid #ddd',
-                    }}
+                    sx={{ py: 1, '&:hover': { backgroundColor: '#f5f5f5' } }}
                   >
                     <Grid container spacing={3}>
                       <Grid item xs={6}>
@@ -225,6 +232,7 @@ const PostList: React.FC = () => {
           </Box>
         </Box>
       </Paper>
+
       {totalPages > 1 && (
         <Box mt={4} display="flex" justifyContent="center">
           <Pagination
@@ -232,6 +240,7 @@ const PostList: React.FC = () => {
             page={currentPage}
             onChange={handlePageChange}
             color="primary"
+            disabled={isLoading} // 로딩 중에는 페이지네이션을 비활성화
           />
         </Box>
       )}
