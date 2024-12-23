@@ -159,8 +159,18 @@ export default function MyPage() {
   }
   return (
     <div className="page" style={{ width: '50%' }}>
-      <Container maxWidth="md" sx={{ width: '100%' }}>
-        <Paper elevation={2} className="profile-style">
+      <Container
+        maxWidth="md"
+        sx={{ width: '100%', padding: '24px', justifyContent: 'center' }}
+      >
+        <Paper
+          elevation={2}
+          sx={{
+            maxWidth: '100%',
+            margin: '0 auto',
+          }}
+          className="profile-style"
+        >
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Typography variant="h5" className="mypage-one-title">
               나의 정보
