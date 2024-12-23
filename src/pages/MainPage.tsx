@@ -51,12 +51,15 @@ const MainPage: React.FC = () => {
             params: { limit: 3 },
           })
           console.log(`Fetched Posts for board ${board.id}:`, response.data) // 각 게시판의 게시물 확인
-          if (response.data && response.data.posts) {
-            postsByBoard[board.id] = response.data.posts
-          }
+
+          const posts = response.data?.data?.posts || []
+          postsByBoard[board.id] = posts
         })
         await Promise.all(promises)
+
+        // 상태 업데이트
         setPostsForBoards(postsByBoard)
+        console.log(`게시판 미리 보기 데이터: `, postsForBoards)
       } catch (err) {
         console.error('게시물 조회 실패:', err)
         setError('게시물을 가져오는 데 실패했습니다.')
@@ -84,10 +87,18 @@ const MainPage: React.FC = () => {
   )
 
   return (
-    <Box sx={{ maxWidth: '1200px', margin: '0 auto', padding: 2 }}>
+    <Box
+      sx={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: 2,
+        paddingTop: { xs: 8, sm: 10 }, // 상단 여백 추가 (반응형)
+      }}
+    >
+      {' '}
       <Grid container spacing={2}>
         {currentBoardItems.map((item) => (
-          <Grid item xs={12} md={6} key={item.id}>
+          <Grid item xs={12} sm={6} key={item.id}>
             <Paper
               sx={{
                 padding: 2,
@@ -95,25 +106,47 @@ const MainPage: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                overflow: 'hidden', // 내용 넘침 방지
               }}
             >
               <Typography variant="h6">
                 <Link
                   to={`/boards/${item.id}`}
-                  style={{ textDecoration: 'none' }}
+                  style={{
+                    textDecoration: 'none',
+                    color: '#000000', // 검정색
+                    cursor: 'pointer',
+                  }}
                 >
                   {item.name}
                 </Link>
               </Typography>
+              {/* 검정색 구분선 추가 */}
+              <Box
+                sx={{
+                  // margin: '16px 0', // 위아래 간격
+                  height: '1px', // 구분선 두께
+                  backgroundColor: '#000000', // 검정색
+                }}
+              />
+              {/* 게시글 미리 보기 */}
               {postsForBoards[item.id] && postsForBoards[item.id].length > 0 ? (
-                <Box>
+                <Box
+                  sx={{ marginTop: 1, maxHeight: '120px', overflowY: 'auto' }}
+                >
                   {postsForBoards[item.id].map((post) => (
                     <Box key={post.id}>
                       <Link
                         to={`/boards/${item.id}/posts/${post.id}`}
-                        style={{ textDecoration: 'none' }}
+                        style={{
+                          textDecoration: 'none',
+                          color: 'inherit',
+                          cursor: 'pointer',
+                        }}
                       >
-                        <Typography variant="body2">{post.title}</Typography>
+                        <Typography variant="body2" noWrap>
+                          {post.title}
+                        </Typography>
                       </Link>
                     </Box>
                   ))}
@@ -127,7 +160,6 @@ const MainPage: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-
       <Box sx={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
         <Pagination
           count={Math.ceil(boardItems.length / itemsPerPage)}

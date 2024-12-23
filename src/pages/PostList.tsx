@@ -66,20 +66,23 @@ const PostList: React.FC = () => {
   const fetchPosts = async () => {
     setIsLoading(true)
     setError(null)
+
     try {
       const response = await httpClient.get(`/boards/${boardId}/posts`, {
         params: { limit: 10, page: currentPage },
       })
-      const postsData = response.data.data.posts || []
-      const pagination = response.data.data.pagination || {}
 
+      const postsData = response.data.data?.posts || []
+      const pagination = response.data.data?.pagination || {}
+
+      // 총 페이지 수 및 게시글 설정
       setPosts(postsData)
-      setTotalPages(pagination.totalPages || 0)
+      setTotalPages(
+        pagination.totalPages || Math.ceil(pagination.totalCount / 10)
+      )
     } catch (err: any) {
       if (err.response?.status === 401) {
-        // Refresh 토큰 요청 또는 로그아웃 처리
         console.log('토큰 만료: 재인증이 필요합니다.')
-        // Refresh Token 로직 추가
       } else {
         console.error(err)
         setError('게시글을 불러오는데 실패했습니다.')
@@ -94,6 +97,7 @@ const PostList: React.FC = () => {
     page: number
   ) => {
     setCurrentPage(page)
+    setPosts([]) // 이전 데이터 초기화
   }
 
   if (isLoading)
