@@ -176,10 +176,10 @@ export default function Comment({ postWriter }: props) {
   }
 
   const client = createClient()
-  const sendEmail = async (comment_id: number) => {
+  const sendEmail = async (comment_id: string) => {
     try {
       const response = await client.post(
-        `/boards/${boardId}/posts/${postId}/email`,
+        `/email/boards/${boardId}/posts/${postId}`,
         { commentId: comment_id }
       )
       if (response.status === 200) {
@@ -266,7 +266,7 @@ export default function Comment({ postWriter }: props) {
                       type="submit"
                       variant="contained"
                       size="small"
-                      onClick={() => sendEmail(Number(comment.id))}
+                      onClick={() => sendEmail(String(comment.id))}
                       sx={{
                         backgroundColor: 'black',
                         '&:hover': {
