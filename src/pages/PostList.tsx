@@ -88,7 +88,7 @@ const PostList: React.FC = () => {
     setError(null)
 
     try {
-      console.log('요청 파라미터:', { limit: 5, page: currentPage }) // 페이지와 limit 값 확인
+      console.log('요청 파라미터:', { limit: 5, page: currentPage })
 
       const response = await httpClient.get(`/boards/${boardId}/posts`, {
         params: { limit: 5, page: currentPage },
@@ -96,28 +96,20 @@ const PostList: React.FC = () => {
 
       console.log('API 응답:', response.data)
 
-      const postsData = response.data.data?.posts || []
-      const pagination = response.data.data?.pagination || {}
+      // API 응답 구조에 맞게 데이터 처리
+      const postsData = response.data?.data?.posts || [] // 게시글 데이터
+      const pagination = response.data?.data?.pagination || {} // 페이지네이션 정보
 
-      setPosts(postsData) // 총 페이지 수 및 게시글 설정
+      setPosts(postsData)
 
-      // 게시글이 없으면 totalPages를 1로 설정
-      const totalPosts = pagination.totalCount || 0
-      // const calculatedTotalPages =
-      //   totalPosts === 0 ? 1 : Math.ceil(totalPosts / 10)
-      const calculatedTotalPages = Math.ceil(totalPosts / 10)
-
-      // 특정 boardId(1번 게시판)인 경우, 최소 페이지 값 1로 설정
-      if (Number(boardId) === 1) {
-        setTotalPages(Math.max(1, calculatedTotalPages))
-      } else {
-        setTotalPages(calculatedTotalPages)
-      }
+      // API에서 제공한 totalPages를 사용
+      const calculatedTotalPages = pagination.totalPages || 1 // 기본값 1
+      setTotalPages(calculatedTotalPages)
     } catch (err: any) {
       if (err.response?.status === 401) {
         console.log('토큰 만료: 재인증이 필요합니다.')
       } else {
-        console.error(err)
+        console.error('게시글 요청 실패:', err)
         setError('게시글을 불러오는데 실패했습니다.')
       }
     } finally {
@@ -216,11 +208,11 @@ const PostList: React.FC = () => {
       {totalPages > 1 && (
         <Box mt={4} display="flex" justifyContent="center">
           <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
+            count={totalPages} // API에서 가져온 총 페이지 수
+            page={currentPage} // 현재 페이지
+            onChange={handlePageChange} // 페이지 변경 이벤트
             color="primary"
-            disabled={isLoading} // 로딩 중에는 페이지네이션을 비활성화
+            disabled={isLoading} // 로딩 중에는 비활성화
           />
         </Box>
       )}
