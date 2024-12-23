@@ -51,12 +51,15 @@ const MainPage: React.FC = () => {
             params: { limit: 3 },
           })
           console.log(`Fetched Posts for board ${board.id}:`, response.data) // 각 게시판의 게시물 확인
-          if (response.data && response.data.posts) {
-            postsByBoard[board.id] = response.data.posts
-          }
+
+          const posts = response.data?.data?.posts || []
+          postsByBoard[board.id] = posts
         })
         await Promise.all(promises)
+
+        // 상태 업데이트
         setPostsForBoards(postsByBoard)
+        console.log(`게시판 미리 보기 데이터: `, postsForBoards)
       } catch (err) {
         console.error('게시물 조회 실패:', err)
         setError('게시물을 가져오는 데 실패했습니다.')
@@ -100,7 +103,11 @@ const MainPage: React.FC = () => {
               <Typography variant="h6">
                 <Link
                   to={`/boards/${item.id}`}
-                  style={{ textDecoration: 'none' }}
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    cursor: 'pointer',
+                  }}
                 >
                   {item.name}
                 </Link>
@@ -111,7 +118,11 @@ const MainPage: React.FC = () => {
                     <Box key={post.id}>
                       <Link
                         to={`/boards/${item.id}/posts/${post.id}`}
-                        style={{ textDecoration: 'none' }}
+                        style={{
+                          textDecoration: 'none',
+                          color: 'inherit',
+                          cursor: 'pointer',
+                        }}
                       >
                         <Typography variant="body2">{post.title}</Typography>
                       </Link>
