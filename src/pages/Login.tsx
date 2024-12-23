@@ -76,18 +76,16 @@ export default function Login() {
         storeLogin(res.data.id)
         alert('로그인 완료')
         navigate('/')
-      } else if (res.status === 401) {
-        setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.')
-      } else if (res.status === 400) {
-        setErrorMessage('형식을 지켜 다시 입력해주세요')
-      } else if (res.status === 500) {
-        setErrorMessage('서버 오류가 발생했습니다.')
-      } else {
-        alert('로그인에 실패했습니다.')
       }
     } catch (err: any) {
-      console.error('Error setting up request:', err.message)
-      setErrorMessage('요청 처리 중 다른 문제가 발생했습니다.')
+      if (err.response.status === 401) {
+        setErrorMessage('이메일 또는 비밀번호가 일치하지 않습니다.')
+      } else if (err.response.status === 400) {
+        setErrorMessage('형식을 지켜 다시 입력해주세요.')
+      } else {
+        console.error('Error setting up request:', err.message)
+        setErrorMessage('요청 처리 중 다른 문제가 발생했습니다.')
+      }
     }
   }
   const handleClickShowPassword = () => setShowPassword((show) => !show)
