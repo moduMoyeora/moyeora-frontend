@@ -6,16 +6,25 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import Link from '@mui/material/Link'
+import FormHelperText from '@mui/material/FormHelperText'
 import React from 'react'
+import InputAdornment from '@mui/material/InputAdornment'
+import InputLabel from '@mui/material/InputLabel'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { FormControl } from '@mui/material'
 
 export default function Signup() {
   const navigate = useNavigate()
   const [nickname, setNickname] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
+  const [showPassword, setShowPassword] = React.useState(false)
 
   const [isNicknameValid, setIsNicknameValid] = React.useState(false)
   const [isEmailValid, setIsEmailValid] = React.useState(false)
@@ -94,6 +103,20 @@ export default function Signup() {
     } else {
       setIsPasswordValid(false)
     }
+  }
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault()
+  }
+
+  const handleMouseUpPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault()
   }
   const handleSignup = async () => {
     try {
@@ -183,7 +206,47 @@ export default function Signup() {
             </Button>
           </div>
           <div className="signup-one">
-            <TextField
+            <FormControl>
+              <InputLabel
+                error={!isPasswordValid && password.length > 0}
+                size="normal"
+              >
+                비밀번호
+              </InputLabel>
+              <OutlinedInput
+                error={!isPasswordValid && password.length > 0}
+                style={{ width: '100%', marginTop: '0px' }}
+                id="outlined-adornment-password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => validatePassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showPassword
+                          ? 'hide the password'
+                          : 'display the password'
+                      }
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+              <FormHelperText id="outlined-weight-helper-text">
+                {!isPasswordValid && password.length > 0
+                  ? '비밀번호 형식이 틀렸습니다.'
+                  : '영문, 숫자, 특수문자 포함 8~15자'}
+              </FormHelperText>
+            </FormControl>
+
+            {/* <TextField
               error={!isPasswordValid && password.length > 0}
               onChange={(e) => {
                 const value = e.target.value
@@ -198,7 +261,7 @@ export default function Signup() {
                   ? '비밀번호 형식이 틀렸습니다.'
                   : '영문, 숫자, 특수문자 포함 8~15자'
               }
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
