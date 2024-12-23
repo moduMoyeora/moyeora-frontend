@@ -185,25 +185,25 @@ const PostList: React.FC = () => {
                   key={post.id}
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  <Grid
-                    container
-                    spacing={3}
+                  <Paper
                     sx={{
-                      py: 1,
+                      py: 1, // 여기에 padding을 추가해서 hover 효과가 글자 뿐 아니라 박스 전체로 확장되도록
                       '&:hover': { backgroundColor: '#f5f5f5' },
                       borderBottom: '1px solid #ddd',
                     }}
                   >
-                    <Grid item xs={6}>
-                      <Typography noWrap>{post.title}</Typography>
+                    <Grid container spacing={3}>
+                      <Grid item xs={6}>
+                        <Typography noWrap>{post.title}</Typography>
+                      </Grid>
+                      <Grid item xs={3} textAlign="center">
+                        {post.nickname}
+                      </Grid>
+                      <Grid item xs={3} textAlign="center">
+                        {new Date(post.created_at).toLocaleDateString()}
+                      </Grid>
                     </Grid>
-                    <Grid item xs={3} textAlign="center">
-                      {post.nickname}
-                    </Grid>
-                    <Grid item xs={3} textAlign="center">
-                      {new Date(post.created_at).toLocaleDateString()}
-                    </Grid>
-                  </Grid>
+                  </Paper>
                 </Link>
               ))
             )}
