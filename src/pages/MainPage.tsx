@@ -140,7 +140,7 @@ const MainPage: React.FC = () => {
                         sx={{
                           py: 1, // Padding을 추가하여 hover 효과 범위 확대
                           '&:hover': { backgroundColor: '#f5f5f5' },
-                          borderBottom: '1px solid #ddd',
+                          // borderBottom: '1px solid #ddd',
                           width: '100%', // 게시글 전체에 hover 적용
                         }}
                       >

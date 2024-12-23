@@ -59,6 +59,13 @@ const PostList: React.FC = () => {
     fetchBoardTitle()
   }, [boardId])
 
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page)
+  }
+
   useEffect(() => {
     fetchPosts()
   }, [currentPage, boardId])
@@ -94,14 +101,6 @@ const PostList: React.FC = () => {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    setCurrentPage(page)
-    setPosts([]) // 이전 데이터 초기화
   }
 
   if (isLoading)
@@ -193,7 +192,7 @@ const PostList: React.FC = () => {
                     sx={{
                       py: 1, // 여기에 padding을 추가해서 hover 효과가 글자 뿐 아니라 박스 전체로 확장되도록
                       '&:hover': { backgroundColor: '#f5f5f5' },
-                      borderBottom: '1px solid #ddd',
+                      // borderBottom: '1px solid #ddd',
                     }}
                   >
                     <Grid container spacing={3}>
